@@ -1,0 +1,242 @@
+body {
+    background-color: #555555;
+    margin: 0;
+    padding: 0;
+}
+
+@font-face {
+    font-family: Oswald-Regular;
+    src: url(/static/fonts/oswald/oswald-regular.ttf);
+}
+
+@font-face {
+    font-family: Oswald-Light;
+    src: url(/static/fonts/oswald/oswald-light.ttf);
+}
+
+@font-face {
+    font-family: Oswald-Bold;
+    src: url(/static/fonts/oswald/oswald-bold.ttf);
+}
+
+@font-face {
+    font-family: Sacramento;
+    src: url(/static/fonts/sacramento/Sacramento-Regular.ttf);
+}
+
+p {
+    font-family: Oswald-Regular;
+    -webkit-font-smoothing: antialiased;
+    font-size: 1em;
+    color: white;  
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+.center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -5%;
+    margin-top: -5%;
+    width: 10%;
+}
+
+.linkButton {
+    background-color: #7EC0EE;
+    width: 30vw;
+    height: 50px;
+    border: 3px solid #FFFFFF;
+    outline: none;
+    text-decoration: none;
+    font-family: Oswald-Regular;
+    font-size: 2em;
+    color: white;
+    z-index: 1;
+    
+    -webkit-transition: background-color 0.5s;
+    transition: background-color 0.5s;
+}
+
+
+
+
+/* .wrapper { 
+  height: 100%;
+  width: 100%;
+  left:0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  position: absolute;
+background: linear-gradient(135deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
+background-size: 1800% 1800%;
+
+-webkit-animation: rainbow 8s ease infinite;
+-z-animation: rainbow 8s ease infinite;
+-o-animation: rainbow 8s ease infinite;
+  animation: rainbow 8s ease infinite;}
+
+@-webkit-keyframes rainbow {
+    0%{background-position:0% 82%}
+    50%{background-position:100% 19%}
+    100%{background-position:0% 82%}
+}
+@-moz-keyframes rainbow {
+    0%{background-position:0% 82%}
+    50%{background-position:100% 19%}
+    100%{background-position:0% 82%}
+}
+@-o-keyframes rainbow {
+    0%{background-position:0% 82%}
+    50%{background-position:100% 19%}
+    100%{background-position:0% 82%}
+}
+@keyframes rainbow { 
+    0%{background-position:0% 82%}
+    50%{background-position:100% 19%}
+    100%{background-position:0% 82%}
+}
+
+
+*/
+
+
+
+
+/* ---------------------- Navigation Bar ----------------------- */
+#navBar {
+    position: fixed;
+    background-color: #7EC0EE;
+    width: 100vw;
+    height: 50px;
+    left: 0;
+    right: 0;
+    border-bottom: 3px solid white;
+    z-index: 2;
+}
+
+.navButton {
+    float: right;
+    width: 70px;
+    height: 50px;
+    border-left: 1px solid white;
+    background-color: #7EC0EE;
+    
+    -webkit-transition: background-color 0.5s;
+    transition: background-color 0.5s;
+}
+
+.navButton:hover {
+    background-color: #349BE5;
+}
+
+.navButton p {
+    text-align: center;
+    padding-top: 13px;
+}
+
+#navLogo {
+    position: fixed;
+    background-color: #7EC0EE;
+    height: 125px;
+    width: 125px;
+    border: 3px solid white;
+    border-top: 0;
+    top: 0;
+    left: 10vw;
+    z-index: 3;
+    
+    -webkit-transition: background-color 0.5s;
+    transition: background-color 0.5s;
+}
+
+#navLogo:hover {
+    background-color: #349BE5;
+}
+
+#navLogo img {
+    height: 120px;
+    width: 100px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5%;
+    margin-bottom: 0;
+    transform: rotate(-50deg);
+}
+
+#navLogo p {
+    margin-top: -5%;
+    font-family: Oswald-Bold;
+    font-size: 2em;
+    text-align: center;
+}
+
+/* ------------------------------------------------------------- */
+
+#matthewKokolichTitle {
+    position: fixed;
+    top: 50%;
+    right: calc(15vw );
+    -ms-transform: translate(0%, -50%);
+    transform: translate(0%, -50%);
+}
+
+#matthewKokolichTitle p {
+    font-family: Oswald-Bold;
+    font-size: 7em;
+    text-align: center;
+}
+
+
+/* ----------------------- Page Content ------------------------ */
+#homeContent {
+    position: fixed;
+    height: 95vh;
+    width: 300px;
+    margin-left: 8vw;
+    background: rgba(255,255,255,0.7);
+    border-radius: 10px;
+    cursor: default;
+    z-index: 0;
+}
+
+#homeContent h1 {
+    margin-top: 20vh;
+    font-size: 4vw;
+    color: black;
+    font-family: Sacramento;
+    text-align: center;
+}
+
+#homeContent p {
+    padding: 20px;
+    padding-top: 0;
+    font-family: Oswald-Light;
+    font-size: 1.2em;
+    color: black;
+    text-align: center;
+}
+
+#homeContent .linkButton {
+    position: absolute;
+    width: 250px;
+    height: 50px;
+    left: 25px;
+    bottom: 25px;
+    cursor: pointer;
+    text-align: center;
+}
+
+#homeContent .linkButton p {
+    font-size: 1em;
+    color: white;
+    font-family: Oswald-Bold;
+}
+
+/* ------------------------------------------------------------- */
