@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Page Title -->
+    <title>Register</title>
+
+    <!-- Page Icon -->
+    <link rel="icon" href="/static/img/oli.png" />
+    <!-- import css -->
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css" />
+    <link rel="text/javascript" src="/static/js/bootstrap.bundle.min.js" />
+    <!-- import javascript scripts -->
+    <script type="text/javascript" src="/static/js/transitions.js"></script>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-light bg-primary">
+      <a class="navbar-brand h1" href="/">
+        <h1>
+          PoVo
+        </h1>
+      </a>
+    </nav>
+    <div align="center" style="margin : 5%;">
+      <form method="POST" action="/register/post">
+        <div class="form-group">
+          <label class="float-left">Username</label>
+          <input type="text" class="form-control" id="username" name="username" placeholder="Enter a username" />
+        </div>
+        <div class="form-group">
+          <label class="float-left">Name</label>
+          <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" />
+        </div>
+        <div class="form-group">
+          <label class="float-left">Email</label>
+          <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" />
+        </div>
+        <div class="form-group">
+          <label class="float-left">Password</label>
+          <input type="password" class="form-control" id="password1" name="password1" placeholder="Enter a password" />
+        </div>
+        <div class="form-group">
+          <label class="float-left">Confirm password</label>
+          <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm password" />
+        </div>
+        <div class="form-group">
+          <label class="float-left">User type</label>
+          <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" id="usertype1" name="usertype" class="custom-control-input" value="1" />
+            <label class="custom-control-label" for="usertype1">Charity</label>
+          </div>
+          <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" id="usertype2" name="usertype" class="custom-control-input" value="2"/>
+            <label class="custom-control-label" for="usertype2">Donor</label>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Register</button>
+      </form>
+    </div>
+  </body>
+</html>
