@@ -43,15 +43,18 @@
         <div class="form-group">
           <label class="float-left">User type</label>
           <div class="custom-control custom-radio custom-control-inline">
-            <input type="radio" id="usertype1" name="usertype" class="custom-control-input" value="0" required/>
+            <input type="radio" id="usertype1" name="usertype" class="custom-control-input" value="1" required />
             <label class="custom-control-label" for="usertype1">Charity</label>
           </div>
           <div class="custom-control custom-radio custom-control-inline">
-            <input type="radio" id="usertype2" name="usertype" class="custom-control-input" value="1" required/>
+            <input type="radio" id="usertype2" name="usertype" class="custom-control-input" value="2" required />
             <label class="custom-control-label" for="usertype2">Donor</label>
           </div>
         </div>
-        <button type="submit" class="btn btn-primary">Register</button>
+        <a href="/login" class="btn btn-secondary px-3" data-toggle="tooltip" data-placement="top" title="Already have an account? Go login">
+          Login
+        </a>
+        <button type="submit" class="btn btn-primary px-3">Register</button>
       </form>
     </div>
   </body>
