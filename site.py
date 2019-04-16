@@ -7,6 +7,8 @@ import sqlite3
 
 dbConn = sqlite3.connect('./db/povo.db')
 
+usertype = ''
+
 def dummy():
     print "Started"
     db.setup(dbConn)    
@@ -18,9 +20,11 @@ def login(response):
     response.write(TemplateAPI.render('login.html', response, {}))
 
 def loginPost(response):
-    username = response.get_field("username")
+    email = response.get_field("email")
     password = response.get_field("password")
-    matches = db.checkPassword(dbConn, username, password)
+    matches = db.checkPassword(dbConn, email, password)
+    usertype = matches
+    print(usertype)
     if matches:
         profile(response)
     else:
@@ -34,14 +38,16 @@ def register(response):
 
 def registerPost(response):
     user = {}
-    user['username'] = response.get_field("username")
     user['name'] = response.get_field("name")
     user['email'] = response.get_field("email")
     user['password'] = response.get_field("password1")
     user['usertype'] = response.get_field("usertype")
-
-    db.registerUser(dbConn, user)
-
+    registered = db.registerUser(dbConn, user)
+    if registered:
+        homePage(response)
+    else:
+        register(response)
+        
 def randPage(response):
     response.write("Today's Random number is: " + str(ranGen()))
 

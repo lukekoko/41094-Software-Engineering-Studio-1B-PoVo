@@ -1,6 +1,7 @@
 *.pyc
 *.pyo
-db
+*.db
+*.db-journal
 
 .installed.cfg
 bin
@@ -12,3 +13,4 @@ parts
 src/*.egg-info
 lib
 lib64
+.vscode/settings.json

@@ -21,36 +21,33 @@
         </h1>
       </a>
     </nav>
+    <!-- oninput="password2.setCustomValidity(password1.value == password2.value ? '' : 'Passwords do not match')" -->
     <div align="center" style="margin : 5%;">
       <form method="POST" action="/register/post">
         <div class="form-group">
-          <label class="float-left">Username</label>
-          <input type="text" class="form-control" id="username" name="username" placeholder="Enter a username" />
+          <label class="float-left">Email</label>
+          <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required />
         </div>
         <div class="form-group">
           <label class="float-left">Name</label>
-          <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" />
-        </div>
-        <div class="form-group">
-          <label class="float-left">Email</label>
-          <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" />
+          <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required />
         </div>
         <div class="form-group">
           <label class="float-left">Password</label>
-          <input type="password" class="form-control" id="password1" name="password1" placeholder="Enter a password" />
+          <input type="password" class="form-control" id="password1" name="password1" placeholder="Enter a password" required />
         </div>
         <div class="form-group">
           <label class="float-left">Confirm password</label>
-          <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm password" />
+          <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm password" required />
         </div>
         <div class="form-group">
           <label class="float-left">User type</label>
           <div class="custom-control custom-radio custom-control-inline">
-            <input type="radio" id="usertype1" name="usertype" class="custom-control-input" value="1" />
+            <input type="radio" id="usertype1" name="usertype" class="custom-control-input" value="0" required/>
             <label class="custom-control-label" for="usertype1">Charity</label>
           </div>
           <div class="custom-control custom-radio custom-control-inline">
-            <input type="radio" id="usertype2" name="usertype" class="custom-control-input" value="2"/>
+            <input type="radio" id="usertype2" name="usertype" class="custom-control-input" value="1" required/>
             <label class="custom-control-label" for="usertype2">Donor</label>
           </div>
         </div>
@@ -58,4 +55,19 @@
       </form>
     </div>
   </body>
+  <script>
+    var password = document.getElementById("password1");
+    var confirm_password = document.getElementById("password2");
+
+    function validatePassword() {
+      if (password.value != confirm_password.value) {
+        confirm_password.setCustomValidity("Passwords Don't Match");
+      } else {
+        confirm_password.setCustomValidity("");
+      }
+    }
+
+    password.onchange = validatePassword;
+    confirm_password.onkeyup = validatePassword;
+  </script>
 </html>

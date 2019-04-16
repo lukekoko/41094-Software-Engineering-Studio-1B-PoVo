@@ -22,13 +22,12 @@
     <div align="center" style="margin : 5%;">
       <form method="POST" action="/login/post">
         <div class="form-group">
-          <label class="float-left">Username</label>
-          <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" />
+          <label class="float-left">Email</label>
+          <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required />
         </div>
         <div class="form-group">
-            <label class="float-left">Password</label>
-
-          <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" />
+          <label class="float-left">Password</label>
+          <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required />
         </div>
         <button type="submit" class="btn btn-primary">Log in</button>
       </form>
