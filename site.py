@@ -11,7 +11,7 @@ usertype = ''
 
 def dummy():
     print "Started"
-    db.setup(dbConn)    
+    # db.setup(dbConn)    
 
 def homePage(response):
     response.write(TemplateAPI.render('homepage.html', response, {}))
@@ -35,6 +35,7 @@ def registerPost(response):
 
 def login(response):    
     response.write(TemplateAPI.render('login.html', response, {}))
+    response.post()
 
 def loginPost(response):
     email = response.get_field("email")
@@ -45,6 +46,7 @@ def loginPost(response):
     if matches == 1:
         usertype = "Charity"
         # print usertype
+        response.redirect('/dashboard')
         dashboard(response)
     # Donor
     elif matches == 2:

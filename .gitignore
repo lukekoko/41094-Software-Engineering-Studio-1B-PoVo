@@ -1,6 +1,6 @@
 *.pyc
 *.pyo
-*.db
+# *.db
 *.db-journal
 
 .installed.cfg

@@ -48,8 +48,8 @@ def setup(conn):
 		)
 	""")
 
-    # password = bcrypt.hashpw('1234', bcrypt.gensalt())
-    # conn.execute("INSERT INTO user (name, email, password, type) VALUES ('test', 'test@gmail.com', ?, 1)", (password,))
+    password = bcrypt.hashpw('1234', bcrypt.gensalt())
+    conn.execute("INSERT INTO user (name, email, password, type) VALUES ('test', 'test@gmail.com', ?, 1)", (password,))
 
 
 def registerUser(conn, user):
