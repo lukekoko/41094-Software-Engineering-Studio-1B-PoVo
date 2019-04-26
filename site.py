@@ -35,7 +35,6 @@ def registerPost(response):
 
 def login(response):    
     response.write(TemplateAPI.render('login.html', response, {}))
-    response.post()
 
 def loginPost(response):
     email = response.get_field("email")
