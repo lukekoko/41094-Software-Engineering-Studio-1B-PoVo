@@ -2,23 +2,115 @@ from tornado import Server
 import TemplateAPI
 from random import randint
 import json
+import db
+import sqlite3
 
-def dummy():
-    print "Started"
+dbConn = sqlite3.connect('./db/povo.db')
+usertype = ''
+host = "localhost"
+port = 80
+
+
+def setup():
+    print "Server listening on http://{host}:{port}".format(
+        host=host, port=port)
+    # db.setup(dbConn)
+
+
+def loginCheck(fn):
+    def result(response, *args, **kwargs):
+        if response.get_secure_cookie('user_id') is not None:
+            return fn(response, *args, **kwargs)
+        else:
+            response.redirect('/login')
+    return result
+
 
 def homePage(response):
-    response.write(TemplateAPI.render('homepage.html', response, {}))
-
-def randPage(response):
-    response.write("Today's Random number is: " + str(ranGen()))
-
-def ranGen():
-    return randint(0, 10)
+    response.write(TemplateAPI.render(
+        'homepage.html', response, {"title": "Homepage"}))
 
 
-server = Server('0.0.0.0', 80)
-server.register("/", homePage)
-server.register("/rand", randPage)
+def register(response):
+    if response.get_secure_cookie('user_id'):
+        response.redirect('/dashboard')
+    else:
+        fail = response.get_field('fail')
+        response.write(TemplateAPI.render('register.html', response, {
+                       "title": "Register", "fail": fail}))
 
 
-server.run(dummy)
+def registerPost(response):
+    user = {}
+    user['name'] = response.get_field("name")
+    user['email'] = response.get_field("email")
+    user['password'] = response.get_field("password1")
+    user['usertype'] = response.get_field("usertype")
+    register = db.registerUser(dbConn, user)
+    # register successful go to homepage/login
+    if register == 1:
+        response.redirect('/login')
+    # register failed go back to register
+    elif register == 2:
+        response.redirect('/register?fail=userExist')
+    else:
+        response.redirect('/register?fail=error')
+
+
+def login(response):
+    # checks if user is already logged in
+    if response.get_secure_cookie('user_id'):
+        response.redirect('/dashboard')
+    else:
+        login_failed = response.get_field('fail', '') == '1'
+        response.write(TemplateAPI.render(
+            'login.html', response, {'login_failed': login_failed, "title": "Login"}))
+
+
+def loginPost(response):
+    email = response.get_field("email")
+    password = response.get_field("password")
+    matches = db.checkPassword(dbConn, email, password)
+    # Charity
+    if matches:
+        response.set_secure_cookie('user_id', str(matches[0]))
+        response.set_secure_cookie('user_type', str(matches[1]))
+        response.redirect('/dashboard')
+    else:
+        response.redirect('/login?fail=1')
+
+
+@loginCheck
+def logout(response):
+    response.clear_cookie('user_id')
+    response.clear_cookie('user_type')
+    response.redirect('/login')
+
+
+@loginCheck
+def dashboard(response):
+    usertype = response.get_secure_cookie('user_type')
+    print usertype
+    response.write(TemplateAPI.render(
+        'dashboard.html', response, {"title": "Dashboard", "usertype": usertype}))
+
+@loginCheck
+def advertisement(response):
+    response.write(TemplateAPI.render("advertisement.html",
+                                      response, {"title": "Advertisement"}))
+
+
+def main():
+    server = Server(host, port)
+    server.register("/", homePage)
+    server.register('/login', login, get=login, post=loginPost)
+    server.register('/register', register, get=register, post=registerPost)
+    server.register('/logout', logout)
+    server.register('/dashboard', dashboard)
+    server.register('/advertisement', advertisement)
+
+    server.run(setup)
+
+
+if __name__ == "__main__":
+    main()
