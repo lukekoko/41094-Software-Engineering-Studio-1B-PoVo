@@ -1,39 +1,22 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <!-- Page Title -->
-    <title>Login</title>
+{% include navbar.html %}
 
-    <!-- Page Icon -->
-    <link rel="icon" href="/static/img/povo.png" />
-    <!-- import css -->
-    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css" />
-    <link rel="text/javascript" src="/static/js/bootstrap.bundle.min.js" />
-    <!-- import javascript scripts -->
-    <script type="text/javascript" src="/static/js/transitions.js"></script>
-  </head>
-
-  <body>
-    <nav class="navbar navbar-light bg-primary">
-      <a class="navbar-brand h1" href="/">
-        <h1>PoVo</h1>
-      </a>
-    </nav>
-    <div align="center" style="margin : 5%;">
-      <form method="POST" action="/login/post">
-        <div class="form-group">
-          <label class="float-left">Email</label>
-          <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required />
-        </div>
-        <div class="form-group">
-          <label class="float-left">Password</label>
-          <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required />
-        </div>
-        <a href="/register" class="btn btn-secondary px-3" data-toggle="tooltip" data-placement="top" title="Don't have an account? Go register">
-          Register
-        </a>
-        <button type="submit" class="btn btn-primary px-3">Log in</button>
-      </form>
+<div align="center" style="margin : 5%;">
+  <h1>Login</h1>
+  <form method="POST" action="/login">
+    {% if login_failed %}
+    <p class="alert alert-danger">Incorrect Username or Password</p>
+    {% end if %}
+    <div class="form-group">
+      <label class="float-left">Email</label>
+      <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required />
     </div>
-  </body>
-</html>
+    <div class="form-group">
+      <label class="float-left">Password</label>
+      <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required />
+    </div>
+    <a href="/register" class="btn btn-secondary px-3" data-toggle="tooltip" data-placement="top" title="Don't have an account? Go register">
+      Register
+    </a>
+    <button type="submit" class="btn btn-primary px-3">Log in</button>
+  </form>
+</div>
