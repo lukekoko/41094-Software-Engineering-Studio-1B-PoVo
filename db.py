@@ -49,7 +49,8 @@ def setup(conn):
 	""")
 
     password = bcrypt.hashpw('1234', bcrypt.gensalt())
-    conn.execute("INSERT INTO user (name, email, password, type) VALUES ('test', 'test@gmail.com', ?, 1)", (password,))
+    conn.execute(
+        "INSERT INTO user (name, email, password, type) VALUES ('test', 'test@gmail.com', ?, 1)", (password,))
 
 
 def registerUser(conn, user):
@@ -58,9 +59,12 @@ def registerUser(conn, user):
     try:
         conn.execute(
             "INSERT INTO user (name, email, password, type) VALUES (:name, :email, :password, :usertype)", user)
-        return True
-    except:
-        return False
+        conn.commit()
+        return 1
+    except sqlite3.IntegrityError:
+        return 2
+    except Exception:
+        return 3
 
 
 def checkPassword(conn, email, password):
@@ -69,8 +73,8 @@ def checkPassword(conn, email, password):
             "SELECT password FROM user WHERE email=?", (email,)).fetchone()
         if bcrypt.checkpw(password.encode('utf8'), hashPW[0].encode('utf8')):
             usertype = conn.execute(
-                "SELECT type FROM user WHERE email=?", (email,)).fetchone()
-            return usertype[0]
+                "SELECT id, type FROM user WHERE email=?", (email,)).fetchone()
+            return usertype
         else:
             return False
     except:
