@@ -27,8 +27,10 @@ def loginCheck(fn):
 
 
 def homePage(response):
-    response.write(TemplateAPI.render(
-        'homepage.html', response, {"title": "Homepage"}))
+    if response.get_secure_cookie('user_id'):
+        response.redirect('/dashboard')
+    else:
+        response.write(TemplateAPI.render('homepage.html', response, {"title": "Homepage"}))
 
 
 def register(response):
