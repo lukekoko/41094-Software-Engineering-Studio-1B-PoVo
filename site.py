@@ -40,6 +40,9 @@ def register(response):
                        "title": "Register", "fail": fail}))
 
 
+def manageUser(response):
+    response.write(TemplateAPI.render('manageUser.html', response, {}))
+
 def registerPost(response):
     user = {}
     user['name'] = response.get_field("name")
@@ -109,9 +112,32 @@ def main():
     server.register('/logout', logout)
     server.register('/dashboard', dashboard)
     server.register('/advertisement', advertisement)
+    server.register('/manageUser', manageUser)
+    server.register('/manageUser/reset', resetPassword )
 
     server.run(setup)
 
 
 if __name__ == "__main__":
     main()
+    if usertype:
+        response.write(TemplateAPI.render('dashboard.html', response, {}))  
+    else:
+        response.write("No access to this page")  
+        
+def randPage(response):
+    response.write("Today's Random number is: " + str(ranGen()))
+
+def ranGen():
+    return randint(0, 10)
+
+def resetPassword(response):
+    user = {}
+    user['email'] = response.get_field("email")
+    user['password'] = response.get_field("password")
+    passwordReset = db.resetUserPassword(dbConn, user)
+    # password reset successful go to dashboard
+    if passwordReset:
+        dashboard(response)
+
+

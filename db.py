@@ -66,6 +66,17 @@ def registerUser(conn, user):
     except Exception:
         return 3
 
+def resetUserPassword(conn, user):
+    try:
+        password = user['password']
+        user['password'] = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt())
+        conn.execute(
+            "UPDATE user set password = :password WHERE email= :email" , user)
+        return True
+    except:
+        return False
+
+
 
 def checkPassword(conn, email, password):
     try:
