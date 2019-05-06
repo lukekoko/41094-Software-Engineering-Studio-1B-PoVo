@@ -1,34 +1,15 @@
-<!DOCTYPE html>
-<html>
+{% include navbar_logged_in.html %}
 
-<head>
-    <!-- Page Title -->
-    <title>Login</title>
-
-    <!-- Page Icon -->
-    <link rel="icon" href="/static/img/oli.png" />
-    <!-- import css -->
-    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css" />
-    <link rel="text/javascript" src="/static/js/bootstrap.bundle.min.js" />
-    <!-- import javascript scripts -->
-    <script type="text/javascript" src="/static/js/transitions.js"></script>
-</head>
-
-<body>
-
-    <form method="POST" action="/manageUser/reset">
-        <div class="form-group">
-            <label class="float-left">Email</label>
-            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required />
-        </div>
-        <div class="form-group">
-            <label class="float-left">Enter New Password</label>
-            <input type="password" class="form-control" id="password" name="password" placeholder="Enter New password"
-                required />
-        </div>
-        <button type="submit" class="btn btn-primary px-3">Reset</button>
-    </form>
-
-</body>
-
-</html>
+<div style="margin: 1%">
+	<form method="POST" action="/resetpassword">
+		<div class="form-group">
+			<label class="float-left">Email</label>
+			<input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required />
+		</div>
+		<div class="form-group">
+			<label class="float-left">Enter New Password</label>
+			<input type="password" class="form-control" id="password" name="password" placeholder="Enter New password" required />
+		</div>
+		<button type="submit" class="btn btn-primary px-3">Reset</button>
+	</form>
+</div>

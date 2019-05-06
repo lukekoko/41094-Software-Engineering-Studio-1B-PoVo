@@ -4,6 +4,8 @@ from random import randint
 import json
 import db
 import sqlite3
+import datetime
+import uuid
 
 dbConn = sqlite3.connect('./db/povo.db')
 usertype = ''
@@ -30,7 +32,8 @@ def homePage(response):
     if response.get_secure_cookie('user_id'):
         response.redirect('/dashboard')
     else:
-        response.write(TemplateAPI.render('homepage.html', response, {"title": "Homepage"}))
+        response.write(TemplateAPI.render(
+            'homepage.html', response, {"title": "Homepage"}))
 
 
 def register(response):
@@ -41,9 +44,6 @@ def register(response):
         response.write(TemplateAPI.render('register.html', response, {
                        "title": "Register", "fail": fail}))
 
-
-def manageUser(response):
-    response.write(TemplateAPI.render('manageUser.html', response, {}))
 
 def registerPost(response):
     user = {}
@@ -86,6 +86,23 @@ def loginPost(response):
 
 
 @loginCheck
+def resetPassword(response):
+    response.write(TemplateAPI.render('manageUser.html',
+                                      response, {'title': 'Reset Password'}))
+
+
+@loginCheck
+def resetPasswordPost(response):
+    user = {}
+    user['email'] = response.get_field("email")
+    user['password'] = response.get_field("password")
+    passwordReset = db.resetUserPassword(dbConn, user)
+    # password reset successful go to dashboard
+    if passwordReset:
+        response.redirect('/dashboard')
+
+
+@loginCheck
 def logout(response):
     response.clear_cookie('user_id')
     response.clear_cookie('user_type')
@@ -95,15 +112,51 @@ def logout(response):
 @loginCheck
 def dashboard(response):
     usertype = response.get_secure_cookie('user_type')
-    print usertype
     response.write(TemplateAPI.render(
         'dashboard.html', response, {"title": "Dashboard", "usertype": usertype}))
 
+
 @loginCheck
 def advertisement(response):
-    items = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']
+    ads = db.getAds(dbConn)
+    # print ads
     response.write(TemplateAPI.render("advertisement.html",
-                                      response, {"title": "Advertisement", "items": items}))
+                                      response, {"title": "Advertisement", "ads": ads}))
+
+
+@loginCheck
+def advertisementPost(response):
+    ad = {}
+    ad["title"] = response.get_field("title")
+    ad["desc"] = response.get_field("desc")
+    ad["imgpath"] = []
+
+    for x in response.get_files("img"):
+        imgpath = "static/img_store/ad_img/" + str(uuid.uuid4().hex) + ".png"
+        try:
+            with open(imgpath, 'wb') as img:
+                img.write(str(x[2]))
+            ad["imgpath"].append(imgpath)
+        except:
+            pass
+                    
+    ad["datetime"] = datetime.datetime.now().isoformat()
+    ad["userid"] = response.get_secure_cookie('user_id')
+    ad["active"] = 1
+    result = db.createAd(dbConn, ad)
+    if result:
+        response.redirect("/advertisement")
+    else:
+        response.redirect("/advertisement?fail=1")
+
+
+def advertisementDelete(response):
+    # print response.get_field('id')
+    result = db.deleteAds(dbConn, response.get_field('id'))
+    if result:
+        response.redirect("/advertisement")
+    else:
+        response.redirect("/advertisement?fail=1")
 
 
 def main():
@@ -113,33 +166,14 @@ def main():
     server.register('/register', register, get=register, post=registerPost)
     server.register('/logout', logout)
     server.register('/dashboard', dashboard)
-    server.register('/advertisement', advertisement)
-    server.register('/manageUser', manageUser)
-    server.register('/manageUser/reset', resetPassword )
+    server.register('/advertisement', advertisement,
+                    get=advertisement, post=advertisementPost)
+    server.register('/advertisement/delete', advertisementDelete)
+    server.register('/resetpassword', resetPassword,
+                    get=resetPassword, post=resetPasswordPost)
 
     server.run(setup)
 
 
 if __name__ == "__main__":
     main()
-    if usertype:
-        response.write(TemplateAPI.render('dashboard.html', response, {}))  
-    else:
-        response.write("No access to this page")  
-        
-def randPage(response):
-    response.write("Today's Random number is: " + str(ranGen()))
-
-def ranGen():
-    return randint(0, 10)
-
-def resetPassword(response):
-    user = {}
-    user['email'] = response.get_field("email")
-    user['password'] = response.get_field("password")
-    passwordReset = db.resetUserPassword(dbConn, user)
-    # password reset successful go to dashboard
-    if passwordReset:
-        dashboard(response)
-
-
