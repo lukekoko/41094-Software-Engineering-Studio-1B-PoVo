@@ -73,7 +73,7 @@ def checkPassword(conn, email, password):
             "SELECT password FROM user WHERE email=?", (email,)).fetchone()
         if bcrypt.checkpw(password.encode('utf8'), hashPW[0].encode('utf8')):
             usertype = conn.execute(
-                "SELECT id, type FROM user WHERE email=?", (email,)).fetchone()
+                "SELECT id, type, name FROM user WHERE email=?", (email,)).fetchone()
             return usertype
         else:
             return False

@@ -4,6 +4,7 @@ from random import randint
 import json
 import db
 import sqlite3
+import mailPoVo
 
 dbConn = sqlite3.connect('./db/povo.db')
 usertype = ''
@@ -14,7 +15,7 @@ port = 80
 def setup():
     print "Server listening on http://{host}:{port}".format(
         host=host, port=port)
-    # db.setup(dbConn)
+     db.setup(dbConn)
 
 
 def loginCheck(fn):
@@ -49,6 +50,7 @@ def registerPost(response):
     register = db.registerUser(dbConn, user)
     # register successful go to homepage/login
     if register == 1:
+        mailPoVo.sendConfirmationEmail(user['email'])
         response.redirect('/login')
     # register failed go back to register
     elif register == 2:
@@ -75,6 +77,7 @@ def loginPost(response):
     if matches:
         response.set_secure_cookie('user_id', str(matches[0]))
         response.set_secure_cookie('user_type', str(matches[1]))
+        response.set_secure_cookie('name', str(matches[2]))
         response.redirect('/dashboard')
     else:
         response.redirect('/login?fail=1')
@@ -90,7 +93,9 @@ def logout(response):
 @loginCheck
 def dashboard(response):
     usertype = response.get_secure_cookie('user_type')
+    name = response.get_secure_cookie('name')
     print usertype
+    print name
     response.write(TemplateAPI.render(
         'dashboard.html', response, {"title": "Dashboard", "usertype": usertype}))
 
@@ -100,6 +105,9 @@ def advertisement(response):
     response.write(TemplateAPI.render("advertisement.html",
                                       response, {"title": "Advertisement", "items": items}))
 
+@loginCheck
+def test(response):
+    response.write(TemplateAPI.render("test.html", response, {"title": "test"}))
 
 def main():
     server = Server(host, port)
@@ -109,7 +117,7 @@ def main():
     server.register('/logout', logout)
     server.register('/dashboard', dashboard)
     server.register('/advertisement', advertisement)
-
+    server.register('/test', test)
     server.run(setup)
 
 

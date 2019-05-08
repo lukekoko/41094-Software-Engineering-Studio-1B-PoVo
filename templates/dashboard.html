@@ -1,13 +1,16 @@
 {% include navbar_logged_in.html %}
 <div style="margin: 1%">
 	{% if int(usertype) == 1 %}
-	<div class="alert alert-success">Charity</div>
+	<div class="alert alert-success">Welcome {%name%}, here are your daily post for the day</div>
 	{% end if %} {% if int(usertype) == 2 %}
-	<div class="alert alert-success">Donor</div>
+	<div class="alert alert-success">Welcome {%name%}, here are your daily post for the day</div>
 	{% end if %}
 </div>
 <div align="center" style="margin : 0% 5% 5% 5%;">
 	<h1>Dashboard</h1>
 
 	<a class="btn btn-primary" href="/advertisement">Advertisement</a>
+    <br>
+    <a class="btn btn-primary" href="/test">Test</a>
+
 </div>
