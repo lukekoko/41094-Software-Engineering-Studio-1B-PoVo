@@ -1,56 +1,6 @@
 import sqlite3
 import bcrypt
-
-
-def setup(conn):
-    print("setup")
-    conn.execute("DROP TABLE IF EXISTS user;")
-    conn.execute("DROP TABLE IF EXISTS advertisements")
-    conn.execute("DROP TABLE IF EXISTS booking")
-    # conn.execute("DROP TABLE IF EXISTS ads_history")
-    # conn.execute("DROP TABLE IF EXISTS booking_history")
-
-    conn.execute("""
-		CREATE TABLE IF NOT EXISTS user
-		(
-			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-			name TEXT NOT NULL,
-			email TEXT unique,
-			city TEXT,
-			postcode TEXT,
-			password TEXT NOT NULL,
-			type INT NOT NULL
-		);
-	""")
-
-    conn.execute("""
-		CREATE TABLE IF NOT EXISTS advertisements
-		(
-			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-			title TEXT NOT NULL,
-			description TEXT,
-			active INT,
-			user_id INT,
-			FOREIGN KEY (user_id) REFERENCES user(id)
-		);
-	""")
-
-    conn.execute("""
-		CREATE TABLE IF NOT EXISTS bookings
-		(
-			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-			title TEXT NOT NULL,
-			description TEXT,
-			user_id INT,
-			active INT,
-			Location TEXT,
-			FOREIGN KEY (user_id) REFERENCES user(id)
-		)
-	""")
-
-    password = bcrypt.hashpw('1234', bcrypt.gensalt())
-    conn.execute(
-        "INSERT INTO user (name, email, password, type) VALUES ('test', 'test@gmail.com', ?, 1)", (password,))
+import os
 
 
 def registerUser(conn, user):
@@ -67,6 +17,18 @@ def registerUser(conn, user):
         return 3
 
 
+def resetUserPassword(conn, user):
+    try:
+        password = user['password']
+        user['password'] = bcrypt.hashpw(
+            password.encode('utf8'), bcrypt.gensalt())
+        conn.execute(
+            "UPDATE user set password = :password WHERE email= :email", user)
+        return True
+    except:
+        return False
+
+
 def checkPassword(conn, email, password):
     try:
         hashPW = conn.execute(
@@ -77,5 +39,59 @@ def checkPassword(conn, email, password):
             return usertype
         else:
             return False
+    except:
+        return False
+
+
+def createAd(conn, ad):
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO advertisements (title, description, datetime, active, user_id) VALUES (:title, :desc, :datetime, :active, :userid)", ad)
+        for x in ad["imgpath"]:
+            conn.execute(
+                "INSERT INTO advertisement_img (path, ad_id) VALUES (?, ?)", (x, cursor.lastrowid))
+        conn.commit()
+        return True
+    except:
+        return False
+
+
+def getAds(conn):
+    ads = []
+    cursor = conn.execute(
+        "SELECT id, title, description, datetime, user_id FROM advertisements")
+    for row in cursor:
+        ad = {}
+        ad["id"] = row[0]
+        ad["title"] = row[1]
+        ad["desc"] = row[2]
+        ad["datetime"] = row[3]
+        ad["user_id"] = row[4]
+        try:
+            imgpath = conn.execute(
+                "SELECT path FROM advertisement_img WHERE ad_id=?", (row[0],))
+            ad["img_path"] = imgpath.fetchone()[0]
+        except:
+            ad["img_path"] = ""
+        # print ad
+        ads.append(ad)
+    return ads
+
+
+def deleteAds(conn, id):
+    try:
+        conn.execute(
+            "DELETE FROM advertisements WHERE id=?", (id,)
+        )
+        cursor = conn.execute(
+            "SELECT path FROM advertisement_img WHERE ad_id=?", (id,))
+        for x in cursor:
+            os.remove(x[0])
+        conn.execute(
+            "DELETE FROM advertisement_img WHERE ad_id=?", (id,)
+        )
+        conn.commit()
+        return True
     except:
         return False
