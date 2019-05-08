@@ -4,6 +4,7 @@ from random import randint
 import json
 import db
 import sqlite3
+import mailPoVo
 
 dbConn = sqlite3.connect('./db/povo.db')
 usertype = ''
@@ -49,6 +50,7 @@ def registerPost(response):
     register = db.registerUser(dbConn, user)
     # register successful go to homepage/login
     if register == 1:
+        mailPoVo.sendConfirmationEmail(user['email'])
         response.redirect('/login')
     # register failed go back to register
     elif register == 2:
