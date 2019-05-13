@@ -95,3 +95,22 @@ def deleteAds(conn, id):
         return True
     except:
         return False
+
+
+def getUser(conn, id):
+    try:
+        user = conn.execute(
+            "SELECT name, email, type FROM user WHERE id=?", (id,)
+        ).fetchone()
+        return user
+    except:
+        return False
+
+
+def editUser(conn, user):
+	try:
+		conn.execute(
+			"UPDATE user set name = :name, email = :email, type = :usertype WHERE id= :id", user)
+		return True
+	except:
+		return False
