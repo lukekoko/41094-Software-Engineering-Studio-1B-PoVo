@@ -17,7 +17,7 @@ port = 80
 def setup():
     print "Server listening on http://{host}:{port}".format(
         host=host, port=port)
-    # db.setup(dbConn)
+   # db.setup(dbConn)
 
 
 def loginCheck(fn):
@@ -30,11 +30,12 @@ def loginCheck(fn):
 
 
 def homePage(response):
+    ads = db.getAds(dbConn)
     if response.get_secure_cookie('user_id'):
         response.redirect('/dashboard')
     else:
         response.write(TemplateAPI.render(
-            'homepage.html', response, {"title": "Homepage"}))
+            'homepage.html', response, {"title": "Homepage", "ads": ads}))
 
 
 def register(response):
@@ -114,10 +115,11 @@ def logout(response):
 
 @loginCheck
 def dashboard(response):
+    ads = db.getAds(dbConn)
     usertype = response.get_secure_cookie('user_type')
     name = response.get_secure_cookie('name')
     response.write(TemplateAPI.render(
-        'dashboard.html', response, {"title": "Dashboard", "usertype": usertype}))
+        'dashboard.html', response, {"title": "Dashboard", "usertype": usertype, "ads": ads}))
 
 
 @loginCheck

@@ -95,3 +95,13 @@ def deleteAds(conn, id):
         return True
     except:
         return False
+
+def createBooking(conn, booking):
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO booking (title, description, datetime, active, charity_user_id, donor_user_id, location) VALUES (:title, :desc, :datetime, :charityuserid, :donoruserid, :active, :location)", booking)
+        conn.commit()
+        return True
+    except:
+        return False

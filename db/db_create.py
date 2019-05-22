@@ -47,18 +47,20 @@ def setup(conn):
 		);
 	""")
 
-    # conn.execute("""
-    # 	CREATE TABLE IF NOT EXISTS bookings
-    # 	(
-    # 		id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    # 		title TEXT NOT NULL,
-    # 		description TEXT,
-    # 		user_id INT,
-    # 		active INT,
-    # 		Location TEXT,
-    # 		FOREIGN KEY (user_id) REFERENCES user(id)
-    # 	)
-    # """)
+    conn.execute("""
+     	CREATE TABLE IF NOT EXISTS bookings
+     	(
+     		id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+     		title TEXT NOT NULL,
+     		description TEXT,
+            datetime TEXT,
+     		charity_user_id INT,
+            donor_user_id INT,
+     		active INT,
+     		Location TEXT,
+     		FOREIGN KEY (user_id) REFERENCES user(id)
+     	);
+    """)
 
     # password = bcrypt.hashpw('1234', bcrypt.gensalt())
     # conn.execute(
