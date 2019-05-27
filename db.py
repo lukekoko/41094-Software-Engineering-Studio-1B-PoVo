@@ -114,3 +114,25 @@ def editUser(conn, user):
 		return True
 	except:
 		return False
+
+def getUserAds(conn, userid):
+    ads = []
+    cursor = conn.execute(
+        "SELECT id, title, description, datetime, user_id FROM advertisements WHERE user_id=?", userid
+    )
+    for row in cursor:
+        print row
+        ad = {}
+        ad["id"] = row[0]
+        ad["title"] = row[1]
+        ad["desc"] = row[2]
+        ad["datetime"] = row[3]
+        ad["user_id"] = row[4]
+        try:
+            imgpath = conn.execute(
+                "SELECT path FROM advertisement_img WHERE ad_id=?", (row[0],))
+            ad["img_path"] = imgpath.fetchone()[0]
+        except:
+            ad["img_path"] = ""
+        ads.append(ad)
+    return ads

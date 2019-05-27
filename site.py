@@ -181,7 +181,9 @@ def editAccount(response):
 
 @loginCheck
 def userAds(response):
-	response.write(TemplateAPI.render("userAds.html", response, {"title" : "My Ads"}))
+	ads = db.getUserAds(dbConn, response.get_secure_cookie('user_id'))
+	print ads
+	response.write(TemplateAPI.render("userAds.html", response, {"title" : "My Ads", "ads" : ads}))
 
 def main():
 	server = Server(host, port)
