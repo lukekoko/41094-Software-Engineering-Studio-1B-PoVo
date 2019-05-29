@@ -1,12 +1,29 @@
-{% include navbar.html %}
+{% include navbar_logged_out.html %}
 
-<div align="center" style="margin:5%">
-  <h1 class="display-1">homepage is a big YEET!</h1>
-  <h1 class="display-2">👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀</h1>
-	<a href="/login" class="btn btn-primary btn-lg btn-block my-3">
-		Login
-	</a>
-	<a href="/register" class="btn btn-primary btn-lg btn-block my-3">
-		Register
-	</a>
+
+<div align="center" style="margin: 1% 5% 5% 5%">
+    <h1>Logged out</h1>
+    <a href="/login" class="btn btn-warning mx-3 px-3 my-1">Create post</a>
+    <a href="/login" class="btn btn-warning mx-3 px-3 my-1">View my post</a>
+	<ul class="list-unstyled" style="margin-top: 5%">
+		{% if not ads %}
+    <p class="alert alert-danger">Currently no advertisements</p>		
+		{% else %}
+		{% for ad in ads %}
+		<li class="media my-2 " style="border: px; border-color: black; border-style: solid; border-radius: 10px">
+				<img src="{!ad['img_path']!}" class="mr-3 ml-1 my-3" style="height: 20%; width: 20%;">
+				<div class="media-body my-3">
+					<h5 class="mt-0 mb-1">{!ad["title"]!}</h5>
+					<p>
+						{!ad["desc"]!}
+					</p>
+				</div>
+				<div class="float-right">
+					<a href="/advertisement/view?id={!ad['id']!}" class="btn btn-primary mx-1 my-3">View</a>
+					<a href="/advertisement/delete?id={!ad['id']!}" class="btn btn-danger mx-1 my-3">Delete</a>
+				</div>
+		</li>
+		{% end for %}
+		{% end if %}
+	</ul>
 </div>

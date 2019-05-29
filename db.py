@@ -35,7 +35,7 @@ def checkPassword(conn, email, password):
             "SELECT password FROM user WHERE email=?", (email,)).fetchone()
         if bcrypt.checkpw(password.encode('utf8'), hashPW[0].encode('utf8')):
             usertype = conn.execute(
-                "SELECT id, type FROM user WHERE email=?", (email,)).fetchone()
+                "SELECT id, type, name FROM user WHERE email=?", (email,)).fetchone()
             return usertype
         else:
             return False
@@ -91,6 +91,16 @@ def deleteAds(conn, id):
         conn.execute(
             "DELETE FROM advertisement_img WHERE ad_id=?", (id,)
         )
+        conn.commit()
+        return True
+    except:
+        return False
+
+def createBooking(conn, booking):
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO booking (title, description, datetime, active, charity_user_id, donor_user_id, location) VALUES (:title, :desc, :datetime, :charityuserid, :donoruserid, :active, :location)", booking)
         conn.commit()
         return True
     except:

@@ -4,6 +4,7 @@ from random import randint
 import json
 import db
 import sqlite3
+import mailPoVo
 import datetime
 import uuid
 
@@ -16,7 +17,7 @@ port = 80
 def setup():
     print "Server listening on http://{host}:{port}".format(
         host=host, port=port)
-    # db.setup(dbConn)
+   # db.setup(dbConn)
 
 
 def loginCheck(fn):
@@ -29,11 +30,12 @@ def loginCheck(fn):
 
 
 def homePage(response):
+    ads = db.getAds(dbConn)
     if response.get_secure_cookie('user_id'):
         response.redirect('/dashboard')
     else:
         response.write(TemplateAPI.render(
-            'homepage.html', response, {"title": "Homepage"}))
+            'homepage.html', response, {"title": "Homepage", "ads": ads}))
 
 
 def register(response):
@@ -54,6 +56,7 @@ def registerPost(response):
     register = db.registerUser(dbConn, user)
     # register successful go to homepage/login
     if register == 1:
+        mailPoVo.sendConfirmationEmail(user['email'])
         response.redirect('/login')
     # register failed go back to register
     elif register == 2:
@@ -80,6 +83,7 @@ def loginPost(response):
     if matches:
         response.set_secure_cookie('user_id', str(matches[0]))
         response.set_secure_cookie('user_type', str(matches[1]))
+        response.set_secure_cookie('name', str(matches[2]))
         response.redirect('/dashboard')
     else:
         response.redirect('/login?fail=1')
@@ -111,9 +115,11 @@ def logout(response):
 
 @loginCheck
 def dashboard(response):
+    ads = db.getAds(dbConn)
     usertype = response.get_secure_cookie('user_type')
+    name = response.get_secure_cookie('name')
     response.write(TemplateAPI.render(
-        'dashboard.html', response, {"title": "Dashboard", "usertype": usertype}))
+        'dashboard.html', response, {"title": "Dashboard", "usertype": usertype, "ads": ads}))
 
 
 @loginCheck
@@ -158,6 +164,9 @@ def advertisementDelete(response):
     else:
         response.redirect("/advertisement?fail=1")
 
+@loginCheck
+def test(response):
+    response.write(TemplateAPI.render("test.html", response, {"title": "test"}))
 
 def main():
     server = Server(host, port)
@@ -166,12 +175,13 @@ def main():
     server.register('/register', register, get=register, post=registerPost)
     server.register('/logout', logout)
     server.register('/dashboard', dashboard)
+    server.register('/advertisement', advertisement)
+    server.register('/test', test)
     server.register('/advertisement', advertisement,
                     get=advertisement, post=advertisementPost)
     server.register('/advertisement/delete', advertisementDelete)
     server.register('/resetpassword', resetPassword,
                     get=resetPassword, post=resetPasswordPost)
-
     server.run(setup)
 
 
