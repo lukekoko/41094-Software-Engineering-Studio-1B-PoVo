@@ -2,7 +2,6 @@ import sqlite3
 import bcrypt
 import os
 
-
 def registerUser(conn, user):
     password = user['password']
     user['password'] = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt())
@@ -108,3 +107,43 @@ def createBooking(conn, booking):
         return True
     except:
         return False
+
+def getUser(conn, id):
+    try:
+        user = conn.execute(
+            "SELECT name, email, type FROM user WHERE id=?", (id,)
+        ).fetchone()
+        return user
+    except:
+        return False
+
+
+def editUser(conn, user):
+	try:
+		conn.execute(
+			"UPDATE user set name = :name, email = :email, type = :usertype WHERE id= :id", user)
+		return True
+	except:
+		return False
+
+def getUserAds(conn, userid):
+    ads = []
+    cursor = conn.execute(
+        "SELECT id, title, description, datetime, user_id FROM advertisements WHERE user_id=?", userid
+    )
+    for row in cursor:
+        print row
+        ad = {}
+        ad["id"] = row[0]
+        ad["title"] = row[1]
+        ad["desc"] = row[2]
+        ad["datetime"] = row[3]
+        ad["user_id"] = row[4]
+        try:
+            imgpath = conn.execute(
+                "SELECT path FROM advertisement_img WHERE ad_id=?", (row[0],))
+            ad["img_path"] = imgpath.fetchone()[0]
+        except:
+            ad["img_path"] = ""
+        ads.append(ad)
+    return ads

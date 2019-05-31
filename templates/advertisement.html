@@ -2,8 +2,13 @@
 
 <div style="margin: 1% 5% 5% 5%">
 	<button class="btn btn-primary" data-toggle="modal" data-target="#createAd">Create ad</button>
-	<button class="btn btn-primary">View my ads</button>
-	<ul class="list-unstyled" style="margin-top: 5%">
+	<a class="btn btn-primary" href="/myadvertisements">View my ads</a>
+	<div margin>
+	</div>
+	<ul class="list-unstyled" style="margin-top: 1%">
+		<div class="input" style="width:100%">
+			<!-- <input type="text" name="search" id="search" class="form-control" placeholder="Search"/> -->
+		</div>
 		{% if not ads %}
     <p class="alert alert-danger">No advertisements</p>		
 		{% else %}
@@ -17,13 +22,15 @@
 					</p>
 				</div>
 				<div class="float-right">
-					<a href="/advertisement/view?id={!ad['id']!}" class="btn btn-primary mx-1 my-3">View</a>
+					<a class="btn btn-primary mx-1 my-3" data-toggle="modal" data-target="#viewAdd">View</a>
+					<!-- <a href="/advertisement/view?id={!ad['id']!}" class="btn btn-primary mx-1 my-3">View</a> -->
 					<a href="/advertisement/delete?id={!ad['id']!}" class="btn btn-danger mx-1 my-3">Delete</a>
 				</div>
 		</li>
 		{% end for %}
 		{% end if %}
 	</ul>
+</div>
 </div>
 
 <div class="modal fade" id="createAd" tabindex="-1" role="dialog" aria-labelledby="createAdDialog" aria-hidden="true">
@@ -63,3 +70,55 @@
 		</div>
 	</div>
 </div>
+
+<div class="modal fade" id="viewAd" tabindex="-1" role="dialog" aria-labelledby="createAdDialog" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLongTitle">Create advertisement</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form method="POST" action="/advertisement" enctype="multipart/form-data">
+						<div class="form-group">
+							<label class="float-left">Title</label>
+							<input type="text" class="form-control" id="title" name="title" placeholder="Enter title" required />
+							</div>
+							<div class="form-group">
+							<label class="float-left">Description</label>
+							<input type="text" class="form-control" id="desc" name="desc" placeholder="Enter desc" required />
+							</div>
+							<div class="form-group">
+								<label class="float-left">Images</label>
+								<div class="custom-file">
+									<input type="file" id="img" name="img" multiple>
+									<!-- <input type="file" class="custom-file-input" id="img", name="img">
+									<label class="custom-file-label" for="img" aria-describedby="image">Choose file</label> -->
+								</div>
+							</div>
+							<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+									<button type="submit" class="btn btn-primary">Create ad</button>
+								</div>
+					</form>
+				</div>
+			
+			</div>
+		</div>
+	</div>
+<!-- <div class="modal fade" id="viewAd" tabindex="-1" role="dialog" aria-labelledby="viewAdDialog" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+					</div>
+				
+				</div>
+			</div>
+</div> -->

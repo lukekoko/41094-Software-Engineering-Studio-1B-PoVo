@@ -94,7 +94,7 @@ def loginPost(response):
 
 @loginCheck
 def resetPassword(response):
-    response.write(TemplateAPI.render('manageUser.html',
+    response.write(TemplateAPI.render('resetPassword.html',
                                       response, {'title': 'Reset Password'}))
 
 
@@ -192,6 +192,35 @@ def bookingPost(response):
         print "Failed to create booking"
         response.redirect("/booking")
         
+
+@loginCheck
+def manageAccount(response):
+	userid = response.get_secure_cookie('user_id')
+	user = db.getUser(dbConn, userid)
+	print user
+	response.write(TemplateAPI.render("manageAccount.html",
+									  response, {"title": "Account", "user": user}))
+
+@loginCheck
+def editAccount(response):
+	user = {}
+	user['id'] = response.get_secure_cookie('user_id')
+	user['name'] = response.get_field("name")
+	user['email'] = response.get_field("email")
+	user['usertype'] = response.get_field("usertype")
+	result = db.editUser(dbConn, user)
+	if result:
+		response.redirect("/account")
+	else:
+		response.redirect("/account")
+
+@loginCheck
+def userAds(response):
+	ads = db.getUserAds(dbConn, response.get_secure_cookie('user_id'))
+	print ads
+	response.write(TemplateAPI.render("userAds.html", response, {"title" : "My Ads", "ads" : ads}))
+
+
 @loginCheck
 def test(response):
     response.write(TemplateAPI.render("test.html", response, {"title": "test"}))
@@ -210,6 +239,8 @@ def main():
     server.register('/resetpassword', resetPassword,
                     get=resetPassword, post=resetPasswordPost)
     server.register('/booking', booking, get=booking, post=bookingPost)
+    server.register('/account', manageAccount, get=manageAccount, post=editAccount)
+    server.register('/myadvertisements', userAds)
     server.run(setup)
 
 
