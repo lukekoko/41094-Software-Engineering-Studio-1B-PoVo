@@ -5,7 +5,9 @@ import json
 import db
 import sqlite3
 import mailPoVo
+import base64
 
+db.setup()
 dbConn = sqlite3.connect('./db/povo.db')
 usertype = ''
 host = "localhost"
@@ -15,7 +17,7 @@ port = 80
 def setup():
     print "Server listening on http://{host}:{port}".format(
         host=host, port=port)
-    # db.setup(dbConn)
+    
 
 
 def loginCheck(fn):
@@ -28,7 +30,7 @@ def loginCheck(fn):
 
 
 def homePage(response):
-    response.write(TemplateAPI.render(
+    response.write(TemplateAPI.render(	
         'homepage.html', response, {"title": "Homepage"}))
 
 
@@ -43,6 +45,7 @@ def register(response):
 
 def registerPost(response):
     user = {}
+    user['conf_status'] = 0
     user['name'] = response.get_field("name")
     user['email'] = response.get_field("email")
     user['password'] = response.get_field("password1")
@@ -50,7 +53,7 @@ def registerPost(response):
     register = db.registerUser(dbConn, user)
     # register successful go to homepage/login
     if register == 1:
-        mailPoVo.sendConfirmationEmail(user['email'])
+        mailPoVo.sendConfirmationEmail(user['email'], user['name'], user['usertype'])
         response.redirect('/login')
     # register failed go back to register
     elif register == 2:
@@ -81,6 +84,11 @@ def loginPost(response):
     else:
         response.redirect('/login?fail=1')
 
+def confirmation(response):
+	response.write(TemplateAPI.render(
+        'dashboard.html', response, {"title": "confirmation"}))
+	email = base64.b64decode(response.get_field('acc', ''))
+	print email
 
 @loginCheck
 def logout(response):
@@ -111,6 +119,7 @@ def main():
     server.register('/logout', logout)
     server.register('/dashboard', dashboard)
     server.register('/advertisement', advertisement)
+    server.register('/confirmation', confirmation)
 
     server.run(setup)
 

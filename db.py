@@ -2,9 +2,10 @@ import sqlite3
 import bcrypt
 
 
-def setup(conn):
-    print("setup")
-    conn.execute("DROP TABLE IF EXISTS user;")
+def setup():
+	conn = sqlite3.connect('./db/povo.db')
+	print("setup")
+	conn.execute("DROP TABLE IF EXISTS user;")
     conn.execute("DROP TABLE IF EXISTS advertisements")
     conn.execute("DROP TABLE IF EXISTS booking")
     # conn.execute("DROP TABLE IF EXISTS ads_history")
@@ -19,7 +20,8 @@ def setup(conn):
 			city TEXT,
 			postcode TEXT,
 			password TEXT NOT NULL,
-			type INT NOT NULL
+			type INT NOT NULL,
+			conf_status INT NOT NULL
 		);
 	""")
 
@@ -50,7 +52,7 @@ def setup(conn):
 
     password = bcrypt.hashpw('1234', bcrypt.gensalt())
     conn.execute(
-        "INSERT INTO user (name, email, password, type) VALUES ('test', 'test@gmail.com', ?, 1)", (password,))
+        "INSERT INTO user (name, email, password, type, conf_status) VALUES ('test', 'test@gmail.com', ?, 1, 0)", (password,))
 
 
 def registerUser(conn, user):
@@ -58,7 +60,7 @@ def registerUser(conn, user):
     user['password'] = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt())
     try:
         conn.execute(
-            "INSERT INTO user (name, email, password, type) VALUES (:name, :email, :password, :usertype)", user)
+            "INSERT INTO user (name, email, password, type, conf_status) VALUES (:name, :email, :password, :usertype, 0)", user)
         conn.commit()
         return 1
     except sqlite3.IntegrityError:
