@@ -200,11 +200,13 @@ def bookingPost(response):
 
 def confirmation(response):
     print "does this work"
-    response.redirect("/")
     email = base64.b64decode(response.get_field('acc', ''))
+    response.clear_cookie('active')
     response.set_secure_cookie('active', str(db.confirmUser(dbConn, email)))
-    print "YES"
-    
+    print db.confirmUser(dbConn, email)
+    print response.get_secure_cookie('active')
+    response.redirect("/")
+
 @loginCheck
 def test(response):
     response.write(TemplateAPI.render("test.html", response, {"title": "test"}))

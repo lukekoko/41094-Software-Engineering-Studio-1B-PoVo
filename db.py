@@ -129,4 +129,5 @@ def confirmUser(conn, email):
     cursor = conn.execute(
     "UPDATE user  set active =? WHERE email=?", (1, email)
     )
+    return 1
     
