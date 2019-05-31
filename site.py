@@ -124,6 +124,7 @@ def dashboard(response):
     response.write(TemplateAPI.render(
         'dashboard.html', response, {"title": "Dashboard", "usertype": usertype, "ads": ads}))
 
+
 @loginCheck
 def advertisement(response):
     ads = db.getAds(dbConn)
@@ -147,31 +148,34 @@ def advertisementPost(response):
             ad["imgpath"].append(imgpath)
         except:
             pass
-                    
+
     ad["datetime"] = datetime.datetime.now().isoformat()
     ad["userid"] = response.get_secure_cookie('user_id')
     ad["active"] = 1
     result = db.createAd(dbConn, ad)
     if result:
         print "ad succesfully created"
-        response.redirect("/advertisement")
+        response.redirect("/dashboard")
     else:
         print "failed to create ad"
-        response.redirect("/advertisement?fail=1")
+        response.redirect("/dashboard?fail=1")
 
 
 def advertisementDelete(response):
     # print response.get_field('id')
     result = db.deleteAds(dbConn, response.get_field('id'))
     if result:
-        response.redirect("/advertisement")
+        response.redirect("/dashboard")
     else:
-        response.redirect("/advertisement?fail=1")
+        response.redirect("/dashboard?fail=1")
+
 
 @loginCheck
 def booking(response):
-    response.write(TemplateAPI.render("booking.html", response, {"title": "Booking"}))
-    
+    response.write(TemplateAPI.render(
+        "booking.html", response, {"title": "Booking"}))
+
+
 @loginCheck
 def bookingPost(response):
     booking = {}
@@ -191,39 +195,44 @@ def bookingPost(response):
     else:
         print "Failed to create booking"
         response.redirect("/booking")
-        
+
 
 @loginCheck
 def manageAccount(response):
-	userid = response.get_secure_cookie('user_id')
-	user = db.getUser(dbConn, userid)
-	print user
-	response.write(TemplateAPI.render("manageAccount.html",
-									  response, {"title": "Account", "user": user}))
+    userid = response.get_secure_cookie('user_id')
+    user = db.getUser(dbConn, userid)
+    print user
+    response.write(TemplateAPI.render("manageAccount.html",
+                                      response, {"title": "Account", "user": user}))
+
 
 @loginCheck
 def editAccount(response):
-	user = {}
-	user['id'] = response.get_secure_cookie('user_id')
-	user['name'] = response.get_field("name")
-	user['email'] = response.get_field("email")
-	user['usertype'] = response.get_field("usertype")
-	result = db.editUser(dbConn, user)
-	if result:
-		response.redirect("/account")
-	else:
-		response.redirect("/account")
+    user = {}
+    user['id'] = response.get_secure_cookie('user_id')
+    user['name'] = response.get_field("name")
+    user['email'] = response.get_field("email")
+    user['usertype'] = response.get_field("usertype")
+    result = db.editUser(dbConn, user)
+    if result:
+        response.redirect("/account")
+    else:
+        response.redirect("/account")
+
 
 @loginCheck
 def userAds(response):
-	ads = db.getUserAds(dbConn, response.get_secure_cookie('user_id'))
-	print ads
-	response.write(TemplateAPI.render("userAds.html", response, {"title" : "My Ads", "ads" : ads}))
+    ads = db.getUserAds(dbConn, response.get_secure_cookie('user_id'))
+    print ads
+    response.write(TemplateAPI.render(
+        "userAds.html", response, {"title": "My Ads", "ads": ads}))
 
 
 @loginCheck
 def test(response):
-    response.write(TemplateAPI.render("test.html", response, {"title": "test"}))
+    response.write(TemplateAPI.render(
+        "test.html", response, {"title": "test"}))
+
 
 def main():
     server = Server(host, port)
@@ -239,7 +248,8 @@ def main():
     server.register('/resetpassword', resetPassword,
                     get=resetPassword, post=resetPasswordPost)
     server.register('/booking', booking, get=booking, post=bookingPost)
-    server.register('/account', manageAccount, get=manageAccount, post=editAccount)
+    server.register('/account', manageAccount,
+                    get=manageAccount, post=editAccount)
     server.register('/myadvertisements', userAds)
     server.run(setup)
 
