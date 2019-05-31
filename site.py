@@ -7,6 +7,7 @@ import sqlite3
 import mailPoVo
 import datetime
 import uuid
+import base64
 
 dbConn = sqlite3.connect('./db/povo.db')
 usertype = ''
@@ -55,6 +56,7 @@ def registerPost(response):
     user['usertype'] = response.get_field("usertype")
     register = db.registerUser(dbConn, user)
     # register successful go to homepage/login
+    print register
     if register == 1:
         print "registration succesful"
         mailPoVo.sendConfirmationEmail(user['email'])
@@ -87,6 +89,7 @@ def loginPost(response):
         response.set_secure_cookie('user_id', str(matches[0]))
         response.set_secure_cookie('user_type', str(matches[1]))
         response.set_secure_cookie('name', str(matches[2]))
+        response.set_secure_cookie('active', str(matches[3]))
         response.redirect('/dashboard')
     else:
         response.redirect('/login?fail=1')
@@ -118,11 +121,14 @@ def logout(response):
 
 @loginCheck
 def dashboard(response):
+    active = response.get_secure_cookie('active')
+    print active
     ads = db.getAds(dbConn)
+    name = response.get_secure_cookie('name')
     usertype = response.get_secure_cookie('user_type')
     name = response.get_secure_cookie('name')
     response.write(TemplateAPI.render(
-        'dashboard.html', response, {"title": "Dashboard", "usertype": usertype, "ads": ads}))
+        'dashboard.html', response, {"title": "Dashboard", "usertype": usertype, "ads": ads, "active": active, "name": name}))
 
 @loginCheck
 def advertisement(response):
@@ -191,7 +197,14 @@ def bookingPost(response):
     else:
         print "Failed to create booking"
         response.redirect("/booking")
-        
+
+def confirmation(response):
+    print "does this work"
+    response.redirect("/")
+    email = base64.b64decode(response.get_field('acc', ''))
+    response.set_secure_cookie('active', str(db.confirmUser(dbConn, email)))
+    print "YES"
+    
 @loginCheck
 def test(response):
     response.write(TemplateAPI.render("test.html", response, {"title": "test"}))
@@ -210,6 +223,7 @@ def main():
     server.register('/resetpassword', resetPassword,
                     get=resetPassword, post=resetPasswordPost)
     server.register('/booking', booking, get=booking, post=bookingPost)
+    server.register('/confirmation', confirmation)
     server.run(setup)
 
 

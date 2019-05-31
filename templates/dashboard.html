@@ -1,6 +1,9 @@
 {% include navbar_logged_in.html %}
 <div align="center" style="margin: 1% 5% 5% 5%">
-    <h1>Logged in</h1>
+    {% if active == "0"%}
+        <p class="alert alert-danger">Please confirm your email</p>
+    {% end if %}
+    <h1>Hello {!name!}, welcome to PoVo</h1>
 	<button class="btn btn-primary" data-toggle="modal" data-target="#createAd">Create ad</button>
 	<button class="btn btn-primary">View my ads</button>
 	<ul class="list-unstyled" style="margin-top: 5%">
