@@ -139,8 +139,10 @@ def advertisementPost(response):
     ad["title"] = response.get_field("title")
     ad["desc"] = response.get_field("desc")
     ad["imgpath"] = []
+    img = response.get_files("img")
+    print img
 
-    for x in response.get_files("img"):
+    for x in img:
         imgpath = "static/img_store/ad_img/" + str(uuid.uuid4().hex) + ".png"
         try:
             with open(imgpath, 'wb') as img:
@@ -161,6 +163,7 @@ def advertisementPost(response):
         response.redirect("/dashboard?fail=1")
 
 
+@loginCheck
 def advertisementDelete(response):
     # print response.get_field('id')
     result = db.deleteAds(dbConn, response.get_field('id'))
@@ -169,6 +172,36 @@ def advertisementDelete(response):
     else:
         response.redirect("/dashboard?fail=1")
 
+
+@loginCheck
+def adView(response):
+    adId = response.get_field('id', '')
+    ads = db.viewAd(dbConn, adId)
+    print ads
+    response.write(TemplateAPI.render(
+        "advertisementView.html", response, {"title": "test", "ads": ads}))
+
+
+@loginCheck
+def advertisementEdit(response):
+    ad = {}
+    ad["title"] = response.get_field("title")
+    ad["desc"] = response.get_field("desc")
+    ad["imgpath"] = []
+
+    for x in response.get_files("img"):
+        imgpath = "static/img_store/ad_img/" + str(uuid.uuid4().hex) + ".png"
+        try:
+            with open(imgpath, 'wb') as img:
+                img.write(str(x[2]))
+            ad["imgpath"].append(imgpath)
+        except:
+            pass
+
+    ad["datetime"] = datetime.datetime.now().isoformat()
+    ad["userid"] = response.get_secure_cookie('user_id')
+    ad["active"] = 1
+    print ad
 
 @loginCheck
 def booking(response):
@@ -245,6 +278,8 @@ def main():
     server.register('/advertisement', advertisement,
                     get=advertisement, post=advertisementPost)
     server.register('/advertisement/delete', advertisementDelete)
+    server.register('/advertisement/view', adView)
+    server.register('/advertisement/edit', advertisementEdit)
     server.register('/resetpassword', resetPassword,
                     get=resetPassword, post=resetPasswordPost)
     server.register('/booking', booking, get=booking, post=bookingPost)
