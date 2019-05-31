@@ -260,6 +260,10 @@ def userAds(response):
     response.write(TemplateAPI.render(
         "userAds.html", response, {"title": "My Ads", "ads": ads}))
 
+@loginCheck
+def viewAppointments(response):
+    apps = db.getAppointments(dbConn, response.get_secure_cookie('user_id'))
+
 
 @loginCheck
 def test(response):
@@ -286,6 +290,7 @@ def main():
     server.register('/account', manageAccount,
                     get=manageAccount, post=editAccount)
     server.register('/myadvertisements', userAds)
+    server.register('/myappointments', viewAppointments)
     server.run(setup)
 
 
