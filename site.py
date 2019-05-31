@@ -56,6 +56,7 @@ def registerPost(response):
     register = db.registerUser(dbConn, user)
     # register successful go to homepage/login
     if register == 1:
+        print "registration succesful"
         mailPoVo.sendConfirmationEmail(user['email'])
         response.redirect('/login')
     # register failed go back to register
@@ -76,11 +77,13 @@ def login(response):
 
 
 def loginPost(response):
+    print "logging in"
     email = response.get_field("email")
     password = response.get_field("password")
     matches = db.checkPassword(dbConn, email, password)
     # Charity
     if matches:
+        print "login sucessful"
         response.set_secure_cookie('user_id', str(matches[0]))
         response.set_secure_cookie('user_type', str(matches[1]))
         response.set_secure_cookie('name', str(matches[2]))
@@ -121,17 +124,16 @@ def dashboard(response):
     response.write(TemplateAPI.render(
         'dashboard.html', response, {"title": "Dashboard", "usertype": usertype, "ads": ads}))
 
-
 @loginCheck
 def advertisement(response):
     ads = db.getAds(dbConn)
-    # print ads
     response.write(TemplateAPI.render("advertisement.html",
                                       response, {"title": "Advertisement", "ads": ads}))
 
 
 @loginCheck
 def advertisementPost(response):
+    print "Creating ads"
     ad = {}
     ad["title"] = response.get_field("title")
     ad["desc"] = response.get_field("desc")
@@ -151,8 +153,10 @@ def advertisementPost(response):
     ad["active"] = 1
     result = db.createAd(dbConn, ad)
     if result:
+        print "ad succesfully created"
         response.redirect("/advertisement")
     else:
+        print "failed to create ad"
         response.redirect("/advertisement?fail=1")
 
 
@@ -165,6 +169,30 @@ def advertisementDelete(response):
         response.redirect("/advertisement?fail=1")
 
 @loginCheck
+def booking(response):
+    response.write(TemplateAPI.render("booking.html", response, {"title": "Booking"}))
+    
+@loginCheck
+def bookingPost(response):
+    booking = {}
+    booking["title"] = response.get_field("title")
+    booking["desc"] = response.get_field("desc")
+    booking["datetime"] = response.get_field("datetime")
+    booking["charityuserid"] = 1
+    booking["donoruserid"] = 1
+    booking["active"] = 1
+    booking["location"] = response.get_field("location")
+    print booking
+    print "attempting to create booking"
+    result = db.createBooking(dbConn, booking)
+    if result:
+        print "booking successfully created"
+        response.redirect("/dashboard")
+    else:
+        print "Failed to create booking"
+        response.redirect("/booking")
+        
+@loginCheck
 def test(response):
     response.write(TemplateAPI.render("test.html", response, {"title": "test"}))
 
@@ -175,13 +203,13 @@ def main():
     server.register('/register', register, get=register, post=registerPost)
     server.register('/logout', logout)
     server.register('/dashboard', dashboard)
-    server.register('/advertisement', advertisement)
     server.register('/test', test)
     server.register('/advertisement', advertisement,
                     get=advertisement, post=advertisementPost)
     server.register('/advertisement/delete', advertisementDelete)
     server.register('/resetpassword', resetPassword,
                     get=resetPassword, post=resetPasswordPost)
+    server.register('/booking', booking, get=booking, post=bookingPost)
     server.run(setup)
 
 

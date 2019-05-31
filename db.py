@@ -62,6 +62,7 @@ def getAds(conn):
     cursor = conn.execute(
         "SELECT id, title, description, datetime, user_id FROM advertisements")
     for row in cursor:
+        print row
         ad = {}
         ad["id"] = row[0]
         ad["title"] = row[1]
@@ -98,9 +99,11 @@ def deleteAds(conn, id):
 
 def createBooking(conn, booking):
     try:
+        print "cursor conn"
         cursor = conn.cursor()
+        print "executing cursor"
         cursor.execute(
-            "INSERT INTO booking (title, description, datetime, active, charity_user_id, donor_user_id, location) VALUES (:title, :desc, :datetime, :charityuserid, :donoruserid, :active, :location)", booking)
+            "INSERT INTO bookings (title, description, datetime, charity_user_id, donor_user_id, active, location) VALUES (:title, :desc, :datetime, :charityuserid, :donoruserid, :active, :location)", booking)
         conn.commit()
         return True
     except:

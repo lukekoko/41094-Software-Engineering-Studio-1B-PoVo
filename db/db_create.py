@@ -7,7 +7,7 @@ def setup(conn):
     # conn.execute("DROP TABLE IF EXISTS user;")
     conn.execute("DROP TABLE IF EXISTS advertisements")
     conn.execute("DROP TABLE IF EXISTS advertisement_img")
-    # conn.execute("DROP TABLE IF EXISTS booking")
+    conn.execute("DROP TABLE IF EXISTS bookings")
     # conn.execute("DROP TABLE IF EXISTS ads_history")
     # conn.execute("DROP TABLE IF EXISTS booking_history")
 
@@ -58,7 +58,8 @@ def setup(conn):
             donor_user_id INT,
      		active INT,
      		Location TEXT,
-     		FOREIGN KEY (user_id) REFERENCES user(id)
+     		FOREIGN KEY (donor_user_id) REFERENCES user(id)
+            FOREIGN KEY (charity_user_id) REFERENCES user(id)
      	);
     """)
 
