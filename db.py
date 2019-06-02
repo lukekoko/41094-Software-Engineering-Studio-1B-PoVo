@@ -229,3 +229,12 @@ def editApp(conn, app):
     )
     conn.commit()
 
+def deleteApp(conn, id):
+    try:
+        conn.execute(
+            "DELETE FROM bookings WHERE id=?", (id,)
+        )
+        conn.commit()
+        return True
+    except:
+        return False

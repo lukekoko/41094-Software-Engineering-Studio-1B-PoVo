@@ -312,7 +312,6 @@ def confirmation(response):
     print db.confirmUser(dbConn, email)
     print response.get_secure_cookie('active')
     response.redirect("/")
-    
 @loginCheck
 def viewAppointments(response):
     usertype = response.get_secure_cookie('user_type')
@@ -340,7 +339,6 @@ def appointmentEdit(response):
     app["active"] = 1
     db.editApp(dbConn, app)
     response.redirect("/myappointments")
-
 @loginCheck
 def test(response):
     response.write(TemplateAPI.render(
