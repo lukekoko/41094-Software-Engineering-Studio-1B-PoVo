@@ -109,7 +109,7 @@ def createBooking(conn, booking):
     try:
         cursor = conn.cursor()
         cursor.execute(
-            "INSERT INTO bookings (title, description, datetime, charity_user_id, donor_user_id, active, location) VALUES (:title, :desc, :datetime, :charityuserid, :donoruserid, :active, :location)", booking)
+            "INSERT INTO bookings (title, description, datetime, active, location, user_id) VALUES (:title, :desc, :datetime, :active, :location, :user_id)", booking)
         conn.commit()
         return True
     except:
@@ -207,3 +207,36 @@ def confirmUser(conn, email):
     "UPDATE user  set active =? WHERE email=?", (1, email)
     )
     return 1
+
+def getAppointments(conn, userid):
+    apps = []
+    cursor = conn.execute(
+        "SELECT id, title, description, datetime, location FROM bookings WHERE user_id=?", (userid,)
+    )
+    for row in cursor:
+        print row
+        ad = {}
+        ad["id"] = row[0]
+        ad["title"] = row[1]
+        ad["desc"] = row[2]
+        ad["datetime"] = row[3]
+        ad["location"] = row[4]
+        apps.append(ad)
+    return apps
+
+def editApp(conn, app):
+    conn.execute(
+        "UPDATE bookings set title = :title, description = :desc, datetime = :datetime, location = :location WHERE id =:id", app
+    )
+    conn.commit()
+
+
+def deleteApp(conn, id):
+    try:
+        conn.execute(
+            "DELETE FROM bookings WHERE id=?", (id,)
+        )
+        conn.commit()
+        return True
+    except:
+        return False
