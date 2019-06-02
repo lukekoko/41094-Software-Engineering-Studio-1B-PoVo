@@ -1,9 +1,14 @@
 {% include navbar_logged_in.html %}
 
+<div style="margin: 1% 5% 5% 5%">
+  <form method="POST" action="/searchCharities">
+    <input type="search" id="charitySearch" name="charitySearch" aria-label="Search through site content" />
+    <button type="submit" class="btn btn-primary px-3">Search Charities</button>
+  </form>
 <ul class="list-unstyled">
   {% for charity in filteredCharities %}
   <li class="media my-2 " style="border: px; border-color: black; border-style: solid; border-radius: 10px">
-    <img src="/static/img/default.png" class="mr-3 ml-1 my-3" style="height: 10%; width: 10%;" />
+    <img src="/static/img/default1.png" class="mr-3 ml-1 my-3" style="height: 10%; width: 10%;" />
     <div class="media-body my-3">
       <h5 style="display:inline;" class="mt-0 mb-1">Name:</h5>
       <span style="display:inline;">{!charity[1]!}</span>

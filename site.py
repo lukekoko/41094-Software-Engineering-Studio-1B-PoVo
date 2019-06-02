@@ -204,8 +204,8 @@ def advertisementEdit(response):
     ad["userid"] = response.get_secure_cookie('user_id')
     ad["active"] = 1
     db.editAd(dbConn, ad)
-    view = "/advertisement/view?id=%s" % ad["id"]
-    response.redirect(view)
+    # view = "/advertisement/view?id=%s" % ad["id"]
+    response.redirect('/dashboard')
 
 
 @loginCheck
@@ -270,13 +270,19 @@ def userAds(response):
 @loginCheck
 def searchCharities(response):
     usertype = response.get_secure_cookie('user_type')
+    sType = 0
+    if int(usertype) == 1:
+        sType = 2
+    elif int(usertype) == 2:
+        sType = 1
+
     if not response.get_field("charitySearch"):
-        charities = db.getCharities(dbConn)
+        charities = db.getCharities(dbConn, sType)
         response.write(TemplateAPI.render("searchCharities.html",
                                           response, {"title": "Charities", "charities": charities, "usertype": usertype}))
     else:
         searchQuery = response.get_field("charitySearch")
-        filteredCharities = db.getFilteredCharities(dbConn, searchQuery)
+        filteredCharities = db.getFilteredCharities(dbConn, searchQuery, sType)
         response.write(TemplateAPI.render("filterCharities.html",
                                           response, {"title": "Charities", "filteredCharities": filteredCharities, "usertype": usertype}))
 
