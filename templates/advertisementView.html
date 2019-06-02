@@ -48,7 +48,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="/" enctype="multipart/form-data">
+                    <form method="POST" action="/advertisement/edit?id={!ad["id"]!}" enctype="multipart/form-data">
                         <div class="form-group">
                             <label class="float-left">Title</label>
                             <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" required value='{!ad["title"]!}'/>
