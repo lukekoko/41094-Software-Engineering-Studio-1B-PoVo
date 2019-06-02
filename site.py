@@ -312,6 +312,7 @@ def confirmation(response):
     print db.confirmUser(dbConn, email)
     print response.get_secure_cookie('active')
     response.redirect("/")
+    
 @loginCheck
 def viewAppointments(response):
     usertype = response.get_secure_cookie('user_type')

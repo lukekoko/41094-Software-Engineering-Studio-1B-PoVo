@@ -211,7 +211,7 @@ def confirmUser(conn, email):
 def getAppointments(conn, userid):
     apps = []
     cursor = conn.execute(
-        "SELECT id, title, description, datetime, location FROM bookings WHERE user_id=?", (userid,)
+        "SELECT id, title, description, datetime, location FROM bookings WHERE id=?", (userid,)
     )
     for row in cursor:
         print row
