@@ -232,14 +232,17 @@ def booking(response):
 
 @loginCheck
 def bookingPost(response):
+    adId = response.get_field('id', '')
+
     booking = {}
     booking["title"] = response.get_field("title")
     booking["desc"] = response.get_field("desc")
     booking["datetime"] = response.get_field("datetime")
-    booking["charityuserid"] = 1
-    booking["donoruserid"] = 1
+    booking["user_id"] = response.get_secure_cookie('user_id')
     booking["active"] = 1
     booking["location"] = response.get_field("location")
+    booking["ad_id"] = adId
+    print booking
     print "attempting to create booking"
     result = db.createBooking(dbConn, booking)
     if result:
@@ -309,6 +312,34 @@ def confirmation(response):
     print db.confirmUser(dbConn, email)
     print response.get_secure_cookie('active')
     response.redirect("/")
+    
+@loginCheck
+def viewAppointments(response):
+    usertype = response.get_secure_cookie('user_type')
+    apps = db.getAppointments(dbConn, response.get_secure_cookie('user_id'))
+    response.write(TemplateAPI.render(
+        "myappointments.html", response, {"title": "My Appointments", "apps":apps, "usertype": usertype}))
+
+@loginCheck
+def appointmentDelete(response):
+    result = db.deleteApp(dbConn, response.get_field('id'))
+    if result:
+        response.redirect("/myappointments")
+    else:
+        response.redirect("/dashboard?fail=1")
+
+@loginCheck
+def appointmentEdit(response):
+    app = {}
+    app["id"] = response.get_field('id', '')
+    app["title"] = response.get_field("title")
+    app["desc"] = response.get_field("desc")
+    app["location"] = response.get_field("location")
+    app["datetime"] = datetime.datetime.now().isoformat()
+    app["userid"] = response.get_secure_cookie('user_id')
+    app["active"] = 1
+    db.editApp(dbConn, app)
+    response.redirect("/myappointments")
 
 @loginCheck
 def test(response):
@@ -335,6 +366,9 @@ def main():
     server.register('/account', manageAccount,
                     get=manageAccount, post=editAccount)
     server.register('/myadvertisements', userAds)
+    server.register('/myappointments', viewAppointments)
+    server.register('/Appointment/delete', appointmentDelete)
+    server.register('/Appointment/edit', appointmentEdit)
     server.register('/searchCharities', searchCharities)
     server.register('/confirmation', confirmation)
     server.run(setup)
