@@ -1,4 +1,4 @@
-<!-- {% include navbar_logged_in.html %} -->
+{% include navbar_logged_in.html %}
 
 <div style="margin: 1% 5% 5% 5%">
         <ul class="list-unstyled" style="margin-top: 1%">
@@ -17,6 +17,7 @@
                         </p>
                     </div>
                     <div class="float-right">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#editApp">Edit</button>
                         <a href="#" data-href="/Appointment/delete?id={!app['id']!}" data-toggle="modal" data-target="#confirm-delete"class="btn btn-danger mx-1 my-3">Delete</a>
                     </div>
             </li>
@@ -25,3 +26,64 @@
         </ul>
     </div>
     </div>
+
+    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        Confirm delete
+                    </div>
+                    <div class="modal-body">
+                        Did you really want to delete
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <a class="btn btn-danger btn-ok">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="editApp" tabindex="-1" role="dialog" aria-labelledby="createAdDialog" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Edit {{!app["title"]!}}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                                <form method="POST" action="/booking" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                            <label class="float-left">Title:</label>
+                                            <input type="text" class="form-control" id="title" name="title" placeholder="Enter a title" required />
+                                          </div>
+                                          <div class="form-group">
+                                            <label class="float-left">Description:</label>
+                                            <input type="text" class="form-control" id="desc" name="desc" placeholder="Enter a description" required />
+                                          </div>
+                                          <div class="form-group">
+                                            <label class="float-left">Date:</label>
+                                            <input type="date" class="form-control" id="date" name="date" required />
+                                          </div>
+                                            <div class="form-group">
+                                            <label class="float-left">Location:</label>
+                                            <input type="text" class="form-control" id="location" name="location" placeholder="Enter a location" required />
+                                    </div>
+                                    <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Edit appointment</button>
+                                    </div>
+                            </form>
+                        </div>
+                    
+                    </div>
+                </div>
+            </div>
+    
+        <script>
+            $('#confirm-delete').on('show.bs.modal', function(e) {
+            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+        });
+        </script>

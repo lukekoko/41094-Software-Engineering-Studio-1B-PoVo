@@ -96,6 +96,16 @@ def deleteAds(conn, id):
     except:
         return False
 
+def deleteApp(conn, id):
+    try:
+        conn.execute(
+            "DELETE FROM bookings WHERE id=?", (id,)
+        )
+        conn.commit()
+        return True
+    except:
+        return False
+
 def createBooking(conn, booking):
     try:
         print "cursor conn"

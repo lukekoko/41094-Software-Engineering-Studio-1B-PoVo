@@ -268,6 +268,14 @@ def viewAppointments(response):
     response.write(TemplateAPI.render(
         "myappointments.html", response, {"title": "My Appointments", "apps":apps}))
 
+@loginCheck
+def appointmentDelete(response):
+    result = db.deleteApp(dbConn, response.get_field('id'))
+    if result:
+        response.redirect("/dashboard")
+    else:
+        response.redirect("/dashboard?fail=1")
+
 
 @loginCheck
 def test(response):
@@ -295,6 +303,7 @@ def main():
                     get=manageAccount, post=editAccount)
     server.register('/myadvertisements', userAds)
     server.register('/myappointments', viewAppointments)
+    server.register('/Appointment/delete', appointmentDelete)
     server.run(setup)
 
 
