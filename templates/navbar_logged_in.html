@@ -21,7 +21,13 @@
       <div class="collapse navbar-collapse justify-content-between" id="navbarNavAltMarkup">
         <div class="nav navbar-nav">
           <a href="/dashboard" class="btn btn-light mx-3 my-1">Dashboard</a>
-          <a href="/booking" class="btn btn-light mx-3 my-1">Appointment</a>
+          <a href="/booking" class="btn btn-light mx-3 my-1">Bookings</a>
+          {% if int(usertype) == 2 %}
+          <a class="btn btn-light mx-3 my-1" href="/searchCharities">Charities</a>
+          {%end if%} 
+          {% if int(usertype) == 1 %}
+          <a class="btn btn-light mx-3 my-1" href="/searchDonors">Donors</a>
+          {% end if %}
         </div>
         <div class="nav navbar-nav">
           <a href="/account" class="btn btn-light mx-3 px-2 my-1">Manage User</a>

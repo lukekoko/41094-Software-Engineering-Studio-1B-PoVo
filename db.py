@@ -137,7 +137,8 @@ def editUser(conn, user):
 def getUserAds(conn, userid):
     ads = []
     cursor = conn.execute(
-        "SELECT id, title, description, datetime, user_id FROM advertisements WHERE user_id=?", userid
+        "SELECT id, title, description, datetime, user_id FROM advertisements WHERE user_id=?", (
+            userid,)
     )
     for row in cursor:
         ad = {}
@@ -177,3 +178,21 @@ def viewAd(conn, id):
             ad["img_path"] = ""
         ads.append(ad)
     return ads
+
+
+def getCharities(conn):
+    try:
+        charities = conn.execute(
+            "SELECT id, name, email FROM user WHERE type=1").fetchall()
+        return charities
+    except:
+        return False
+
+
+def getFilteredCharities(conn, searchQuery):
+    try:
+        charities = conn.execute(
+            "SELECT id, name, email FROM user WHERE type=1 AND name=?", (searchQuery,)).fetchall()
+        return charities
+    except:
+        return False
