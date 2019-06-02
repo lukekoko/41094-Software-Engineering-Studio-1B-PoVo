@@ -111,6 +111,12 @@ def editAd(conn, ad):
     )
     conn.commit()
 
+def editApp(conn, app):
+    conn.execute(
+        "UPDATE bookings set title = :title, description = :desc, datetime = :datetime, location = :location WHERE id =:id", app
+    )
+    conn.commit()
+
 
 def createBooking(conn, booking):
     try:
@@ -192,7 +198,7 @@ def viewAd(conn, id):
 def getAppointments(conn, userid):
     apps = []
     cursor = conn.execute(
-        "SELECT id, title, description, datetime FROM bookings WHERE user_id=?", (userid,)
+        "SELECT id, title, description, datetime, location FROM bookings WHERE user_id=?", (userid,)
     )
     for row in cursor:
         print row
@@ -201,6 +207,7 @@ def getAppointments(conn, userid):
         ad["title"] = row[1]
         ad["desc"] = row[2]
         ad["datetime"] = row[3]
+        ad["location"] = row[4]
         apps.append(ad)
     return apps
 

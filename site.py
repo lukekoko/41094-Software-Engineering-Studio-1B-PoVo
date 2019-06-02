@@ -210,8 +210,9 @@ def advertisementEdit(response):
 
 @loginCheck
 def booking(response):
+    usertype = response.get_secure_cookie('user_type')
     response.write(TemplateAPI.render(
-        "booking.html", response, {"title": "Booking"}))
+        "booking.html", response, {"title": "Booking", "usertype": usertype}))
 
 
 @loginCheck
@@ -285,17 +286,31 @@ def searchCharities(response):
 
 @loginCheck
 def viewAppointments(response):
+    usertype = response.get_secure_cookie('user_type')
     apps = db.getAppointments(dbConn, response.get_secure_cookie('user_id'))
     response.write(TemplateAPI.render(
-        "myappointments.html", response, {"title": "My Appointments", "apps":apps}))
+        "myappointments.html", response, {"title": "My Appointments", "apps":apps, "usertype": usertype}))
 
 @loginCheck
 def appointmentDelete(response):
     result = db.deleteApp(dbConn, response.get_field('id'))
     if result:
-        response.redirect("/dashboard")
+        response.redirect("/myappointments")
     else:
         response.redirect("/dashboard?fail=1")
+
+@loginCheck
+def appointmentEdit(response):
+    app = {}
+    app["id"] = response.get_field('id', '')
+    app["title"] = response.get_field("title")
+    app["desc"] = response.get_field("desc")
+    app["location"] = response.get_field("location")
+    app["datetime"] = datetime.datetime.now().isoformat()
+    app["userid"] = response.get_secure_cookie('user_id')
+    app["active"] = 1
+    db.editApp(dbConn, app)
+    response.redirect("/myappointments")
 
 
 @loginCheck
@@ -325,6 +340,7 @@ def main():
     server.register('/myadvertisements', userAds)
     server.register('/myappointments', viewAppointments)
     server.register('/Appointment/delete', appointmentDelete)
+    server.register('/Appointment/edit', appointmentEdit)
     server.register('/searchCharities', searchCharities)
     server.run(setup)
 
