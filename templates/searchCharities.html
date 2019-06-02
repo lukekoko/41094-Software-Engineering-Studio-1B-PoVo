@@ -2,13 +2,12 @@
 
 <div style="margin: 1% 5% 5% 5%">
   <form method="POST" action="/searchCharities">
-    <div class="form-group">
-      <label class="float-left">Email</label>
-      <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required />
-      <button type="submit" class="btn btn-primary px-3">Search Charities</button>
+    <div class="input-group mb-3">
+      <input type="search" class="form-control" placeholder="Search" id="charitySearch" name="charitySearch" aria-label="Search through site content" />
+      <div class="input-group-append">
+        <button class="btn btn-info" type="submit">Search</button>
+      </div>
     </div>
-    <input type="search" id="charitySearch" name="charitySearch" aria-label="Search through site content" />
-    <button type="submit" class="btn btn-primary px-3">Search Charities</button>
   </form>
   <ul class="list-unstyled">
     {% for charity in charities %}
@@ -19,7 +18,7 @@
         <span style="display:inline;">{!charity[1]!}</span>
       </div>
       <div class="float-right">
-        <button class="btn btn-primary mx-3 my-3" data-toggle="modal" data-target="#viewUser">View</button>
+        <button class="btn btn-primary mx-3 my-3" data-toggle="modal" data-target="#viewUser" data-name="{!charity[1]!}" data-email="{!charity[2]!}">View</button>
       </div>
     </li>
     {% end for%}
@@ -30,15 +29,13 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Title</h5>
+        <h5 class="modal-title" id="exampleModalLongTitle"></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        {!charity[0]!}
-        {!charity[1]!}
-        {!charity[2]!}
+        <p id="userDetails"></p>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           <!-- <button type="submit" class="btn btn-primary"> ad</button> -->
@@ -47,3 +44,12 @@
     </div>
   </div>
 </div>
+
+<script>
+  $("#viewUser").on("show.bs.modal", function(e) {
+    var name = e.relatedTarget.dataset.name;
+    var email = e.relatedTarget.dataset.email;
+    document.getElementById("userDetails").innerText = "Email: " + email;
+    document.getElementById("exampleModalLongTitle").innerText = "Name: " + name;
+  });
+</script>

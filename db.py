@@ -57,10 +57,10 @@ def createAd(conn, ad):
         return False
 
 
-def getAds(conn):
+def getAds(conn, search):
     ads = []
     cursor = conn.execute(
-        "SELECT id, title, description, datetime, user_id FROM advertisements")
+        "SELECT id, title, description, datetime, user_id FROM advertisements WHERE title LIKE ?", (search,))
     for row in cursor:
         ad = {}
         ad["id"] = row[0]

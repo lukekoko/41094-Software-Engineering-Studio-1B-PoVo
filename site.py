@@ -30,7 +30,7 @@ def loginCheck(fn):
 
 
 def homePage(response):
-    ads = db.getAds(dbConn)
+    ads = db.getAds(dbConn, "%")
     userid = response.get_secure_cookie("user_id")
     if response.get_secure_cookie('user_id'):
         response.redirect('/dashboard')
@@ -119,19 +119,29 @@ def logout(response):
 
 @loginCheck
 def dashboard(response):
-    ads = db.getAds(dbConn)
     usertype = response.get_secure_cookie('user_type')
     userid = int(response.get_secure_cookie("user_id"))
-    name = response.get_secure_cookie('name')
+    search = response.get_field('charitySearch', '')
+    print search
+    if search:
+        search = "%" + search + "%"
+    else:
+        search = '%'
+    ads = db.getAds(dbConn, search)
+
     response.write(TemplateAPI.render(
         'dashboard.html', response, {"title": "Dashboard", "usertype": usertype, "ads": ads, "userid": userid}))
 
 
 @loginCheck
 def advertisement(response):
-    ads = db.getAds(dbConn)
+    search = response.get_field('search', '')
+    print search
+    usertype = response.get_secure_cookie('user_type')
+    userid = int(response.get_secure_cookie("user_id"))
+    ads = db.getAds(dbConn, '%')
     response.write(TemplateAPI.render("advertisement.html",
-                                      response, {"title": "Advertisement", "ads": ads}))
+                                      response, {"title": "Advertisement", "ads": ads, "userid": userid, "usertype": usertype}))
 
 
 @loginCheck
