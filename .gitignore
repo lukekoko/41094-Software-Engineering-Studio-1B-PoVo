@@ -17,3 +17,4 @@ lib64
 .DS_Store
 .vscode/ipch/373538e5aaf0d6b2/mmap_address.bin
 tornado
+static/img_store/ad_img

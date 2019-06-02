@@ -4,25 +4,26 @@ import bcrypt
 
 def setup(conn):
     print("setup")
-    # conn.execute("DROP TABLE IF EXISTS user;")
+    conn.execute("DROP TABLE IF EXISTS user;")
     conn.execute("DROP TABLE IF EXISTS advertisements")
     conn.execute("DROP TABLE IF EXISTS advertisement_img")
     conn.execute("DROP TABLE IF EXISTS bookings")
     # conn.execute("DROP TABLE IF EXISTS ads_history")
     # conn.execute("DROP TABLE IF EXISTS booking_history")
 
-    # conn.execute("""
-	# 	CREATE TABLE IF NOT EXISTS user
-	# 	(
-	# 		id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-	# 		name TEXT NOT NULL,
-	# 		email TEXT unique,
-	# 		city TEXT,
-	# 		postcode TEXT,
-	# 		password TEXT NOT NULL,
-	# 		type INT NOT NULL
-	# 	);
-	# """)
+    conn.execute("""
+	 	CREATE TABLE IF NOT EXISTS user
+	 	(
+	 		id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+	 		name TEXT NOT NULL,
+	 		email TEXT unique,
+	 		city TEXT,
+	 		postcode TEXT,
+	 		password TEXT NOT NULL,
+	 		type INT NOT NULL,
+            active INT
+	 	);
+	 """)
 
     conn.execute("""
 		CREATE TABLE IF NOT EXISTS advertisements
@@ -54,12 +55,12 @@ def setup(conn):
      		title TEXT NOT NULL,
      		description TEXT,
             datetime TEXT,
-     		charity_user_id INT,
-            donor_user_id INT,
+			ad_id INT,
+			user_id INT,
      		active INT,
      		Location TEXT,
-     		FOREIGN KEY (donor_user_id) REFERENCES user(id)
-            FOREIGN KEY (charity_user_id) REFERENCES user(id)
+			FOREIGN KEY (ad_id) REFERENCES advertisements(id)
+			FOREIGN KEY (user_id) REFERENCES user(id)
      	);
     """)
 
