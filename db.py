@@ -109,7 +109,7 @@ def createBooking(conn, booking):
     try:
         cursor = conn.cursor()
         cursor.execute(
-            "INSERT INTO bookings (title, description, datetime, charity_user_id, donor_user_id, active, location) VALUES (:title, :desc, :datetime, :charityuserid, :donoruserid, :active, :location)", booking)
+            "INSERT INTO bookings (title, description, datetime, active, location, user_id) VALUES (:title, :desc, :datetime, :active, :location, :user_id)", booking)
         conn.commit()
         return True
     except:
