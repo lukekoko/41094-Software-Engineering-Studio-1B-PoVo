@@ -31,7 +31,7 @@ def sendConfirmationEmail(email):
             
             Please click on this link to confirm your email
             
-            http://localhost/confirmation?acc=%s
+            http://66.70.188.73/confirmation?acc=%s
             """%(enc)
             message = 'Subject: {}\n\n{}'.format(subject, body)
             server.sendmail('povotest1@gmail.com', email ,message)
