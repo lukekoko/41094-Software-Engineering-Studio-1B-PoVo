@@ -210,8 +210,9 @@ def advertisementEdit(response):
 
 @loginCheck
 def booking(response):
+    usertype = response.get_secure_cookie('user_type')
     response.write(TemplateAPI.render(
-        "booking.html", response, {"title": "Booking"}))
+        "booking.html", response, {"title": "Booking", "usertype": usertype}))
 
 
 @loginCheck
