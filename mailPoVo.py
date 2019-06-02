@@ -1,6 +1,6 @@
 import os
 import smtplib
-
+import base64
 ##def sendEmail():
 #with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
     #smtp.ehlo()
@@ -22,8 +22,17 @@ def sendConfirmationEmail(email):
             server.starttls()
             server.login('povotest1@gmail.com', 'povotest123')
             
+            enc = base64.b64encode(email);
+            
+            
             subject = 'Welcome to Povo!'
-            body = 'Thank you for signing up with PoVo'
+            body = """
+            Thank you for signing up with PoVo
+            
+            Please click on this link to confirm your email
+            
+            http://localhost/confirmation?acc=%s
+            """%(enc)
             message = 'Subject: {}\n\n{}'.format(subject, body)
             server.sendmail('povotest1@gmail.com', email ,message)
             server.quit()

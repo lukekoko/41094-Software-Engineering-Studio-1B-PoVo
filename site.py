@@ -7,6 +7,7 @@ import sqlite3
 import mailPoVo
 import datetime
 import uuid
+import base64
 
 dbConn = sqlite3.connect('./db/povo.db')
 usertype = ''
@@ -56,6 +57,7 @@ def registerPost(response):
     user['usertype'] = response.get_field("usertype")
     register = db.registerUser(dbConn, user)
     # register successful go to homepage/login
+    print register
     if register == 1:
         print "registration succesful"
         mailPoVo.sendConfirmationEmail(user['email'])
@@ -88,6 +90,7 @@ def loginPost(response):
         response.set_secure_cookie('user_id', str(matches[0]))
         response.set_secure_cookie('user_type', str(matches[1]))
         response.set_secure_cookie('name', str(matches[2]))
+        response.set_secure_cookie('active', str(matches[3]))
         response.redirect('/dashboard')
     else:
         response.redirect('/login?fail=1')
@@ -119,6 +122,9 @@ def logout(response):
 
 @loginCheck
 def dashboard(response):
+    active = response.get_secure_cookie('active')
+    print active
+    name = response.get_secure_cookie('name')
     usertype = response.get_secure_cookie('user_type')
     userid = int(response.get_secure_cookie("user_id"))
     search = response.get_field('charitySearch', '')
@@ -130,8 +136,7 @@ def dashboard(response):
     ads = db.getAds(dbConn, search)
 
     response.write(TemplateAPI.render(
-        'dashboard.html', response, {"title": "Dashboard", "usertype": usertype, "ads": ads, "userid": userid}))
-
+        'dashboard.html', response, {"title": "Dashboard", "usertype": usertype, "ads": ads, "userid": userid, "active": active, "name": name}))
 
 @loginCheck
 def advertisement(response):
@@ -244,7 +249,6 @@ def bookingPost(response):
         print "Failed to create booking"
         response.redirect("/booking")
 
-
 @loginCheck
 def manageAccount(response):
     userid = response.get_secure_cookie('user_id')
@@ -297,6 +301,14 @@ def searchCharities(response):
         response.write(TemplateAPI.render("filterCharities.html",
                                           response, {"title": "Charities", "filteredCharities": filteredCharities, "usertype": usertype}))
 
+def confirmation(response):
+    print "does this work"
+    email = base64.b64decode(response.get_field('acc', ''))
+    response.clear_cookie('active')
+    response.set_secure_cookie('active', str(db.confirmUser(dbConn, email)))
+    print db.confirmUser(dbConn, email)
+    print response.get_secure_cookie('active')
+    response.redirect("/")
 
 @loginCheck
 def test(response):
@@ -324,6 +336,7 @@ def main():
                     get=manageAccount, post=editAccount)
     server.register('/myadvertisements', userAds)
     server.register('/searchCharities', searchCharities)
+    server.register('/confirmation', confirmation)
     server.run(setup)
 
 

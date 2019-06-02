@@ -4,25 +4,26 @@ import bcrypt
 
 def setup(conn):
     print("setup")
-    # conn.execute("DROP TABLE IF EXISTS user;")
+    conn.execute("DROP TABLE IF EXISTS user;")
     conn.execute("DROP TABLE IF EXISTS advertisements")
     conn.execute("DROP TABLE IF EXISTS advertisement_img")
     conn.execute("DROP TABLE IF EXISTS bookings")
     # conn.execute("DROP TABLE IF EXISTS ads_history")
     # conn.execute("DROP TABLE IF EXISTS booking_history")
 
-    # conn.execute("""
-	# 	CREATE TABLE IF NOT EXISTS user
-	# 	(
-	# 		id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-	# 		name TEXT NOT NULL,
-	# 		email TEXT unique,
-	# 		city TEXT,
-	# 		postcode TEXT,
-	# 		password TEXT NOT NULL,
-	# 		type INT NOT NULL
-	# 	);
-	# """)
+    conn.execute("""
+	 	CREATE TABLE IF NOT EXISTS user
+	 	(
+	 		id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+	 		name TEXT NOT NULL,
+	 		email TEXT unique,
+	 		city TEXT,
+	 		postcode TEXT,
+	 		password TEXT NOT NULL,
+	 		type INT NOT NULL,
+            active INT
+	 	);
+	 """)
 
     conn.execute("""
 		CREATE TABLE IF NOT EXISTS advertisements

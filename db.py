@@ -5,15 +5,17 @@ import os
 
 def registerUser(conn, user):
     password = user['password']
+    user['active'] = 0
     user['password'] = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt())
     try:
         conn.execute(
-            "INSERT INTO user (name, email, password, type) VALUES (:name, :email, :password, :usertype)", user)
+            "INSERT INTO user (name, email, password, type, active) VALUES (:name, :email, :password, :usertype, :active)", user)
         conn.commit()
         return 1
     except sqlite3.IntegrityError:
         return 2
     except Exception:
+        print "user registration exception"
         return 3
 
 
@@ -35,7 +37,7 @@ def checkPassword(conn, email, password):
             "SELECT password FROM user WHERE email=?", (email,)).fetchone()
         if bcrypt.checkpw(password.encode('utf8'), hashPW[0].encode('utf8')):
             usertype = conn.execute(
-                "SELECT id, type, name FROM user WHERE email=?", (email,)).fetchone()
+                "SELECT id, type, name, active FROM user WHERE email=?", (email,)).fetchone()
             return usertype
         else:
             return False
@@ -199,3 +201,9 @@ def getFilteredCharities(conn, searchQuery, sType):
         return charities
     except:
         return False
+    
+def confirmUser(conn, email):
+    cursor = conn.execute(
+    "UPDATE user  set active =? WHERE email=?", (1, email)
+    )
+    return 1
