@@ -3,6 +3,7 @@
     {%if userid%}
     <button class="btn btn-primary" data-toggle="modal" data-target="#createAd">Create ad</button>
     <a class="btn btn-primary" href="/myadvertisements">View my ads</a>
+    <!-- <a class="btn btn-primary" href="/myappointments">View Appointments</a> -->
     {%end if%}
   </div>
   <div style="margin: 1% 5% 5% 5%">
@@ -19,7 +20,7 @@
       <p class="alert alert-danger">No advertisements</p>
       {% else %} {% for ad in ads %}
       <li class="media my-2 " style="border: px; border-color: black; border-style: solid; border-radius: 10px">
-        <img src="/{!ad['img_path']!}" class="mr-3 ml-1 my-3" style="max-width: 25%;" onerror="this.onerror=null; this.src='/static/img/default.png'" />
+        <img src="/{!ad['img_path']!}" class="mr-3 ml-1 my-3 align-self-center" style="max-width: 25%;" onerror="this.onerror=null; this.src='/static/img/default.png'" />
         <div class="media-body my-3">
           <h3 class="mt-0 mb-1">{!ad["title"]!}</h3>
           <p>Posted: {!ad["datetime"]!}</p>
@@ -27,8 +28,10 @@
             {!ad["desc"]!}
           </p>
         </div>
-        <div class="float-right">
-          <a class="btn btn-primary mx-1 my-3" href="/advertisement/view?id={!ad['id']!}">View</a>
+        <a class="btn btn-primary mx-1 my-3 align-self-center" href="/advertisement/view?id={!ad['id']!}">View</a>
+
+        <div>
+          <!-- <a class="btn btn-primary mx-1 my-3" href="/booking">Create Appointment</a> -->
         </div>
       </li>
       {% end for %} {% end if %}
