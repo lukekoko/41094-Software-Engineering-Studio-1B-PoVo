@@ -211,14 +211,16 @@ def booking(response):
 
 @loginCheck
 def bookingPost(response):
+    adId = response.get_field('id', '')
+
     booking = {}
     booking["title"] = response.get_field("title")
     booking["desc"] = response.get_field("desc")
     booking["datetime"] = response.get_field("datetime")
-    booking["charityuserid"] = 1
-    booking["donoruserid"] = 1
+    booking["user_id"] = response.get_secure_cookie('user_id')
     booking["active"] = 1
     booking["location"] = response.get_field("location")
+    booking["ad_id"] = adId
     print booking
     print "attempting to create booking"
     result = db.createBooking(dbConn, booking)
@@ -263,6 +265,8 @@ def userAds(response):
 @loginCheck
 def viewAppointments(response):
     apps = db.getAppointments(dbConn, response.get_secure_cookie('user_id'))
+    response.write(TemplateAPI.render(
+        "myappointments.html", response, {"title": "My Appointments", "apps":apps}))
 
 
 @loginCheck

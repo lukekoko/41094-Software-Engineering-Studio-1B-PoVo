@@ -102,7 +102,7 @@ def createBooking(conn, booking):
         cursor = conn.cursor()
         print "executing cursor"
         cursor.execute(
-            "INSERT INTO bookings (title, description, datetime, charity_user_id, donor_user_id, active, location) VALUES (:title, :desc, :datetime, :charityuserid, :donoruserid, :active, :location)", booking)
+            "INSERT INTO bookings (title, description, datetime, active, location, user_id) VALUES (:title, :desc, :datetime, :active, :location, :user_id)", booking)
         conn.commit()
         return True
     except:
@@ -171,25 +171,19 @@ def viewAd(conn, id):
             ad["img_path"] = ""
         ads.append(ad)
     return ads
-# def getAppointments(conn, userid):
-#     apps = []
-#     cursor = conn.execute(
-#         "SELECT id, title, description, datetime, user_id FROM advertisements WHERE user_id=?", userid
-#     )
-#     for row in cursor:
-#         print row
-#         ad = {}
-#         ad["id"] = row[0]
-#         ad["title"] = row[1]
-#         ad["desc"] = row[2]
-#         ad["datetime"] = row[3]
-#         ad["user_id"] = row[4]
-#         try:
-#             imgpath = conn.execute(
-#                 "SELECT path FROM advertisement_img WHERE ad_id=?", (row[0],))
-#             ad["img_path"] = imgpath.fetchone()[0]
-#         except:
-#             ad["img_path"] = ""
-#         ads.append(ad)
-#     return ads
+
+def getAppointments(conn, userid):
+    apps = []
+    cursor = conn.execute(
+        "SELECT id, title, description, datetime FROM bookings WHERE user_id=?", (userid,)
+    )
+    for row in cursor:
+        print row
+        ad = {}
+        ad["id"] = row[0]
+        ad["title"] = row[1]
+        ad["desc"] = row[2]
+        ad["datetime"] = row[3]
+        apps.append(ad)
+    return apps
 

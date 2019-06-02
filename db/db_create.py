@@ -54,14 +54,12 @@ def setup(conn):
      		title TEXT NOT NULL,
      		description TEXT,
             datetime TEXT,
-     		charity_user_id INT,
-            donor_user_id INT,
 			ad_id INT,
+			user_id INT,
      		active INT,
      		Location TEXT,
-     		FOREIGN KEY (donor_user_id) REFERENCES user(id)
-            FOREIGN KEY (charity_user_id) REFERENCES user(id)
 			FOREIGN KEY (ad_id) REFERENCES advertisements(id)
+			FOREIGN KEY (user_id) REFERENCES user(id)
      	);
     """)
 

@@ -1,0 +1,27 @@
+<!-- {% include navbar_logged_in.html %} -->
+
+<div style="margin: 1% 5% 5% 5%">
+        <ul class="list-unstyled" style="margin-top: 1%">
+            <div class="input" style="width:100%">
+                <!-- <input type="text" name="search" id="search" class="form-control" placeholder="Search"/> -->
+            </div>
+            {% if not apps %}
+        <p class="alert alert-danger">No Appointments</p>		
+            {% else %}
+            {% for app in apps %}
+            <li class="media my-2 " style="border: px; border-color: black; border-style: solid; border-radius: 10px">
+                    <div class="media-body my-3">
+                        <h3 class="mt-0 mb-1">{!app["title"]!}</h3>
+                        <p>
+                            {!app["desc"]!}
+                        </p>
+                    </div>
+                    <div class="float-right">
+                        <a href="#" data-href="/Appointment/delete?id={!app['id']!}" data-toggle="modal" data-target="#confirm-delete"class="btn btn-danger mx-1 my-3">Delete</a>
+                    </div>
+            </li>
+            {% end for %}
+            {% end if %}
+        </ul>
+    </div>
+    </div>
