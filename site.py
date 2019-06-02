@@ -31,11 +31,12 @@ def loginCheck(fn):
 
 def homePage(response):
     ads = db.getAds(dbConn)
+    userid = response.get_secure_cookie("user_id")
     if response.get_secure_cookie('user_id'):
         response.redirect('/dashboard')
     else:
         response.write(TemplateAPI.render(
-            'homepage.html', response, {"title": "Homepage", "ads": ads}))
+            'homepage.html', response, {"title": "Homepage", "ads": ads, "userid": userid}))
 
 
 def register(response):
@@ -101,7 +102,7 @@ def resetPassword(response):
 @loginCheck
 def resetPasswordPost(response):
     user = {}
-    user['email'] = response.get_field("email")
+    user['id'] = response.get_secure_cookie('user_id')
     user['password'] = response.get_field("password")
     passwordReset = db.resetUserPassword(dbConn, user)
     # password reset successful go to dashboard
@@ -113,16 +114,17 @@ def resetPasswordPost(response):
 def logout(response):
     response.clear_cookie('user_id')
     response.clear_cookie('user_type')
-    response.redirect('/login')
+    response.redirect('/')
 
 
 @loginCheck
 def dashboard(response):
     ads = db.getAds(dbConn)
     usertype = response.get_secure_cookie('user_type')
+    userid = int(response.get_secure_cookie("user_id"))
     name = response.get_secure_cookie('name')
     response.write(TemplateAPI.render(
-        'dashboard.html', response, {"title": "Dashboard", "usertype": usertype, "ads": ads}))
+        'dashboard.html', response, {"title": "Dashboard", "usertype": usertype, "ads": ads, "userid": userid}))
 
 
 @loginCheck
@@ -140,7 +142,6 @@ def advertisementPost(response):
     ad["desc"] = response.get_field("desc")
     ad["imgpath"] = []
     img = response.get_files("img")
-    print img
 
     for x in img:
         imgpath = "static/img_store/ad_img/" + str(uuid.uuid4().hex) + ".png"
@@ -151,7 +152,7 @@ def advertisementPost(response):
         except:
             pass
 
-    ad["datetime"] = datetime.datetime.now().isoformat()
+    ad["datetime"] = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
     ad["userid"] = response.get_secure_cookie('user_id')
     ad["active"] = 1
     result = db.createAd(dbConn, ad)
@@ -165,7 +166,6 @@ def advertisementPost(response):
 
 @loginCheck
 def advertisementDelete(response):
-    # print response.get_field('id')
     result = db.deleteAds(dbConn, response.get_field('id'))
     if result:
         response.redirect("/dashboard")
@@ -177,14 +177,16 @@ def advertisementDelete(response):
 def adView(response):
     adId = response.get_field('id', '')
     ads = db.viewAd(dbConn, adId)
-    print ads
+    usertype = response.get_secure_cookie('user_type')
+    userid = int(response.get_secure_cookie("user_id"))
     response.write(TemplateAPI.render(
-        "advertisementView.html", response, {"title": "test", "ads": ads}))
+        "advertisementView.html", response, {"title": "test", "ads": ads, "userid": userid, "usertype": usertype}))
 
 
 @loginCheck
 def advertisementEdit(response):
     ad = {}
+    ad["id"] = response.get_field('id', '')
     ad["title"] = response.get_field("title")
     ad["desc"] = response.get_field("desc")
     ad["imgpath"] = []
@@ -201,7 +203,10 @@ def advertisementEdit(response):
     ad["datetime"] = datetime.datetime.now().isoformat()
     ad["userid"] = response.get_secure_cookie('user_id')
     ad["active"] = 1
-    print ad
+    db.editAd(dbConn, ad)
+    view = "/advertisement/view?id=%s" % ad["id"]
+    response.redirect(view)
+
 
 @loginCheck
 def booking(response):
@@ -235,10 +240,11 @@ def bookingPost(response):
 @loginCheck
 def manageAccount(response):
     userid = response.get_secure_cookie('user_id')
+    fail = response.get_field('fail', '') == '1'
     user = db.getUser(dbConn, userid)
     print user
     response.write(TemplateAPI.render("manageAccount.html",
-                                      response, {"title": "Account", "user": user}))
+                                      response, {"title": "Account", "user": user, "fail":  fail}))
 
 
 @loginCheck
@@ -252,15 +258,30 @@ def editAccount(response):
     if result:
         response.redirect("/account")
     else:
-        response.redirect("/account")
+        response.redirect("/account?fail=1")
 
 
 @loginCheck
 def userAds(response):
     ads = db.getUserAds(dbConn, response.get_secure_cookie('user_id'))
+    usertype = response.get_secure_cookie('user_type')
     print ads
     response.write(TemplateAPI.render(
-        "userAds.html", response, {"title": "My Ads", "ads": ads}))
+        "userAds.html", response, {"title": "My Ads", "usertype": usertype, "ads": ads}))
+
+
+@loginCheck
+def searchCharities(response):
+    usertype = response.get_secure_cookie('user_type')
+    if not response.get_field("charitySearch"):
+        charities = db.getCharities(dbConn)
+        response.write(TemplateAPI.render("searchCharities.html",
+                                          response, {"title": "Charities", "charities": charities, "usertype": usertype}))
+    else:
+        searchQuery = response.get_field("charitySearch")
+        filteredCharities = db.getFilteredCharities(dbConn, searchQuery)
+        response.write(TemplateAPI.render("filterCharities.html",
+                                          response, {"title": "Charities", "filteredCharities": filteredCharities, "usertype": usertype}))
 
 @loginCheck
 def viewAppointments(response):
@@ -304,6 +325,7 @@ def main():
     server.register('/myadvertisements', userAds)
     server.register('/myappointments', viewAppointments)
     server.register('/Appointment/delete', appointmentDelete)
+    server.register('/searchCharities', searchCharities)
     server.run(setup)
 
 

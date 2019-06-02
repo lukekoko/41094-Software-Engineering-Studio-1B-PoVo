@@ -2,6 +2,7 @@ import sqlite3
 import bcrypt
 import os
 
+
 def registerUser(conn, user):
     password = user['password']
     user['password'] = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt())
@@ -22,7 +23,7 @@ def resetUserPassword(conn, user):
         user['password'] = bcrypt.hashpw(
             password.encode('utf8'), bcrypt.gensalt())
         conn.execute(
-            "UPDATE user set password = :password WHERE email= :email", user)
+            "UPDATE user set password = :password WHERE id= :id", user)
         return True
     except:
         return False
@@ -61,20 +62,18 @@ def getAds(conn):
     cursor = conn.execute(
         "SELECT id, title, description, datetime, user_id FROM advertisements")
     for row in cursor:
-        print row
         ad = {}
         ad["id"] = row[0]
         ad["title"] = row[1]
         ad["desc"] = row[2]
         ad["datetime"] = row[3]
-        ad["user_id"] = row[4]
+        ad["user_id"] = int(row[4])
         try:
             imgpath = conn.execute(
                 "SELECT path FROM advertisement_img WHERE ad_id=?", (row[0],))
             ad["img_path"] = imgpath.fetchone()[0]
         except:
             ad["img_path"] = ""
-        # print ad
         ads.append(ad)
     return ads
 
@@ -106,17 +105,23 @@ def deleteApp(conn, id):
     except:
         return False
 
+def editAd(conn, ad):
+    conn.execute(
+        "UPDATE advertisements set title = :title, description = :desc WHERE id =:id", ad
+    )
+    conn.commit()
+
+
 def createBooking(conn, booking):
     try:
-        print "cursor conn"
         cursor = conn.cursor()
-        print "executing cursor"
         cursor.execute(
             "INSERT INTO bookings (title, description, datetime, active, location, user_id) VALUES (:title, :desc, :datetime, :active, :location, :user_id)", booking)
         conn.commit()
         return True
     except:
         return False
+
 
 def getUser(conn, id):
     try:
@@ -129,21 +134,23 @@ def getUser(conn, id):
 
 
 def editUser(conn, user):
-	try:
-		conn.execute(
-			"UPDATE user set name = :name, email = :email, type = :usertype WHERE id= :id", user)
-		return True
-	except:
-		return False
+    try:
+        conn.execute(
+            "UPDATE user set name = :name, email = :email, type = :usertype WHERE id= :id", user)
+        # conn.commit()
+        return True
+    except:
+        return False
+
 
 def getUserAds(conn, userid):
     print userid
     ads = []
     cursor = conn.execute(
-        "SELECT id, title, description, datetime, user_id FROM advertisements WHERE user_id=?", (userid,)
+        "SELECT id, title, description, datetime, user_id FROM advertisements WHERE user_id=?", (
+            userid,)
     )
     for row in cursor:
-        print row
         ad = {}
         ad["id"] = row[0]
         ad["title"] = row[1]
@@ -159,20 +166,20 @@ def getUserAds(conn, userid):
         ads.append(ad)
     return ads
 
+
 def viewAd(conn, id):
-    print id
     ads = []
     cursor = conn.execute(
-        "SELECT id, title, description, datetime, user_id FROM advertisements WHERE id=?", (id,)
+        "SELECT id, title, description, datetime, user_id FROM advertisements WHERE id=?", (
+            id,)
     )
     for row in cursor:
-        print row
         ad = {}
         ad["id"] = row[0]
         ad["title"] = row[1]
         ad["desc"] = row[2]
         ad["datetime"] = row[3]
-        ad["user_id"] = row[4]
+        ad["user_id"] = int(row[4])
         try:
             imgpath = conn.execute(
                 "SELECT path FROM advertisement_img WHERE ad_id=?", (row[0],))
@@ -197,3 +204,20 @@ def getAppointments(conn, userid):
         apps.append(ad)
     return apps
 
+
+def getCharities(conn):
+    try:
+        charities = conn.execute(
+            "SELECT id, name, email FROM user WHERE type=1").fetchall()
+        return charities
+    except:
+        return False
+
+
+def getFilteredCharities(conn, searchQuery):
+    try:
+        charities = conn.execute(
+            "SELECT id, name, email FROM user WHERE type=1 AND name=?", (searchQuery,)).fetchall()
+        return charities
+    except:
+        return False

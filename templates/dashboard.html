@@ -1,10 +1,14 @@
 {% include navbar_logged_in.html %}
 <div style="margin: 1% 5% 5% 5%">
-  <div align="center">
-    <h1>Logged in</h1>
-  </div>
+  <!-- {% if int(usertype) == 1 %}
+	<a class="btn btn-primary" href="/searchDonors">View/Search Donors</a>
+	{% end if %} {% if int(usertype) == 2 %}
+	<a class="btn btn-primary" href="/searchCharities">View/Search Charities</a>
+	{% end if %} -->
   <div>
     {% include advertisement.html%}
   </div>
+  <div id="map" style="height:100%"></div>
 </div>
+
 <!-- <a href="/booking" class="btn btn-primary">Appointment (under construction)</a> -->
