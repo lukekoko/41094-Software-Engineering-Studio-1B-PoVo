@@ -211,7 +211,7 @@ def confirmUser(conn, email):
 def getAppointments(conn, userid):
     apps = []
     cursor = conn.execute(
-        "SELECT id, title, description, datetime, location FROM bookings WHERE id=?", (userid,)
+        "SELECT id, title, description, datetime, location FROM bookings WHERE user_id=?", (userid,)
     )
     for row in cursor:
         print row
@@ -222,6 +222,9 @@ def getAppointments(conn, userid):
         ad["datetime"] = row[3]
         ad["location"] = row[4]
         apps.append(ad)
+        print ad
+    if len(apps) == 0:
+        print "no appointments"
     return apps
 def editApp(conn, app):
     conn.execute(

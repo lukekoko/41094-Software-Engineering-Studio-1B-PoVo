@@ -247,7 +247,7 @@ def bookingPost(response):
     result = db.createBooking(dbConn, booking)
     if result:
         print "booking successfully created"
-        response.redirect("/dashboard")
+        response.redirect("/myappointments")
     else:
         print "Failed to create booking"
         response.redirect("/booking")
