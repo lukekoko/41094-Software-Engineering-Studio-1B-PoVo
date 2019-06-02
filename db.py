@@ -57,10 +57,10 @@ def createAd(conn, ad):
         return False
 
 
-def getAds(conn):
+def getAds(conn, search):
     ads = []
     cursor = conn.execute(
-        "SELECT id, title, description, datetime, user_id FROM advertisements")
+        "SELECT id, title, description, datetime, user_id FROM advertisements WHERE title LIKE ?", (search,))
     for row in cursor:
         ad = {}
         ad["id"] = row[0]
@@ -180,19 +180,22 @@ def viewAd(conn, id):
     return ads
 
 
-def getCharities(conn):
+def getCharities(conn, sType):
     try:
         charities = conn.execute(
-            "SELECT id, name, email FROM user WHERE type=1").fetchall()
+            "SELECT id, name, email FROM user WHERE type=?", (sType,)).fetchall()
         return charities
     except:
         return False
 
 
-def getFilteredCharities(conn, searchQuery):
+def getFilteredCharities(conn, searchQuery, sType):
+    print searchQuery
+    query = "%" + searchQuery + "%"
     try:
         charities = conn.execute(
-            "SELECT id, name, email FROM user WHERE type=1 AND name=?", (searchQuery,)).fetchall()
+            "SELECT id, name, email FROM user WHERE type=? AND name LIKE ?", (sType, query,)).fetchall()
+        print charities
         return charities
     except:
         return False

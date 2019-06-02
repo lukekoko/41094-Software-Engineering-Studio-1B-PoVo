@@ -30,7 +30,7 @@ def loginCheck(fn):
 
 
 def homePage(response):
-    ads = db.getAds(dbConn)
+    ads = db.getAds(dbConn, "%")
     userid = response.get_secure_cookie("user_id")
     if response.get_secure_cookie('user_id'):
         response.redirect('/dashboard')
@@ -119,19 +119,29 @@ def logout(response):
 
 @loginCheck
 def dashboard(response):
-    ads = db.getAds(dbConn)
     usertype = response.get_secure_cookie('user_type')
     userid = int(response.get_secure_cookie("user_id"))
-    name = response.get_secure_cookie('name')
+    search = response.get_field('charitySearch', '')
+    print search
+    if search:
+        search = "%" + search + "%"
+    else:
+        search = '%'
+    ads = db.getAds(dbConn, search)
+
     response.write(TemplateAPI.render(
         'dashboard.html', response, {"title": "Dashboard", "usertype": usertype, "ads": ads, "userid": userid}))
 
 
 @loginCheck
 def advertisement(response):
-    ads = db.getAds(dbConn)
+    search = response.get_field('search', '')
+    print search
+    usertype = response.get_secure_cookie('user_type')
+    userid = int(response.get_secure_cookie("user_id"))
+    ads = db.getAds(dbConn, '%')
     response.write(TemplateAPI.render("advertisement.html",
-                                      response, {"title": "Advertisement", "ads": ads}))
+                                      response, {"title": "Advertisement", "ads": ads, "userid": userid, "usertype": usertype}))
 
 
 @loginCheck
@@ -204,8 +214,8 @@ def advertisementEdit(response):
     ad["userid"] = response.get_secure_cookie('user_id')
     ad["active"] = 1
     db.editAd(dbConn, ad)
-    view = "/advertisement/view?id=%s" % ad["id"]
-    response.redirect(view)
+    # view = "/advertisement/view?id=%s" % ad["id"]
+    response.redirect('/dashboard')
 
 
 @loginCheck
@@ -271,13 +281,19 @@ def userAds(response):
 @loginCheck
 def searchCharities(response):
     usertype = response.get_secure_cookie('user_type')
+    sType = 0
+    if int(usertype) == 1:
+        sType = 2
+    elif int(usertype) == 2:
+        sType = 1
+
     if not response.get_field("charitySearch"):
-        charities = db.getCharities(dbConn)
+        charities = db.getCharities(dbConn, sType)
         response.write(TemplateAPI.render("searchCharities.html",
                                           response, {"title": "Charities", "charities": charities, "usertype": usertype}))
     else:
         searchQuery = response.get_field("charitySearch")
-        filteredCharities = db.getFilteredCharities(dbConn, searchQuery)
+        filteredCharities = db.getFilteredCharities(dbConn, searchQuery, sType)
         response.write(TemplateAPI.render("filterCharities.html",
                                           response, {"title": "Charities", "filteredCharities": filteredCharities, "usertype": usertype}))
 

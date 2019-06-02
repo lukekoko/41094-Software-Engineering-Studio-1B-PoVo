@@ -17,12 +17,13 @@
           {!ad["desc"]!}
         </p>
         <div>
-          <button class="btn btn-primary px-3" data-toggle="modal" data-target="#editAd">Edit</button>
+          {% import json %} {% ad = json.dump(ad)%}
+          <button class="btn btn-primary px-3" data-toggle="modal" data-target="#editAd" data-title="{!ad['title']!}" data-desc="{!ad['desc']!}" data-id="{!ad['id']!}">Edit</button>
           <a href="#" data-href="/advertisement/delete?id={!ad['id']!}" data-toggle="modal" data-target="#confirm-delete" class="btn btn-danger mx-1 px-3">Delete</a>
         </div>
       </div>
+      {% end for %}
     </li>
-    {% end for %}
   </ul>
 </div>
 
@@ -30,27 +31,21 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Edit {{ !ad["title"]! }}</h5>
+        <h5 class="modal-title" id="exampleModalLongTitle">Edit</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <form method="POST" action="/advertisement/edit?id={!ad['id']!}" enctype="multipart/form-data">
+        <form id="editForm" method="POST" action="" enctype="multipart/form-data">
           <div class="form-group">
             <label class="float-left">Title</label>
-            <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" required value='{!ad["title"]!}' />
+            <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" required />
           </div>
           <div class="form-group">
             <label class="float-left">Description</label>
-            <input type="text" class="form-control" id="desc" name="desc" placeholder="Enter desc" required value='{!ad["desc"]!}' />
+            <input type="text" class="form-control" id="desc" name="desc" placeholder="Enter desc" required />
           </div>
-          <!-- <div class="form-group">
-            <label class="float-left">Images</label>
-            <div class="custom-file">
-              <input type="file" id="img" name="img" multiple />
-            </div>
-          </div> -->
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary">Edit ad</button>
@@ -77,6 +72,7 @@
     </div>
   </div>
 </div>
+{% end if %}
 
 <script>
   $("#confirm-delete").on("show.bs.modal", function(e) {
@@ -84,6 +80,16 @@
       .find(".btn-ok")
       .attr("href", $(e.relatedTarget).data("href"));
   });
+  $("#editAd").on("show.bs.modal", function(e) {
+    var title = e.relatedTarget.dataset.title;
+    var desc = e.relatedTarget.dataset.desc;
+    var id = e.relatedTarget.dataset.id;
+    $(this)
+      .find('input[name="title"]')
+      .val(title);
+    $(this)
+      .find('input[name="desc"]')
+      .val(desc);
+    document.getElementById("editForm").action = "/advertisement/edit?id=" + id
+  });
 </script>
-
-{% end if %}
