@@ -18,7 +18,6 @@ port = 80
 def setup():
     print "Server listening on http://{host}:{port}".format(
         host=host, port=port)
-   # db.setup(dbConn)
 
 
 def loginCheck(fn):
@@ -98,8 +97,9 @@ def loginPost(response):
 
 @loginCheck
 def resetPassword(response):
+    usertype = response.get_secure_cookie('user_type')    
     response.write(TemplateAPI.render('resetPassword.html',
-                                      response, {'title': 'Reset Password'}))
+                                      response, {'title': 'Reset Password', "usertype": usertype}))
 
 
 @loginCheck
@@ -257,9 +257,9 @@ def manageAccount(response):
     userid = response.get_secure_cookie('user_id')
     fail = response.get_field('fail', '') == '1'
     user = db.getUser(dbConn, userid)
-    print user
+    usertype = response.get_secure_cookie('user_type')
     response.write(TemplateAPI.render("manageAccount.html",
-                                      response, {"title": "Account", "user": user, "fail":  fail}))
+                                      response, {"title": "Account", "user": user, "fail":  fail, "usertype": usertype}))
 
 
 @loginCheck
