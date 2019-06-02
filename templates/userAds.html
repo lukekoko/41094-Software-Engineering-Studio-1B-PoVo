@@ -1,7 +1,7 @@
 {% include navbar_logged_in.html %}
 <div style="margin: 1% 5% 5% 5%">
   <div align="center">
-    <h1>My ads</h1>
+    <h1>My advertisements</h1>
     <a class="btn btn-primary" href="/dashboard">View all ads</a>
   </div>
   <ul class="list-unstyled" style="margin-top: 1%">
@@ -22,7 +22,7 @@
         </div>
       </div>
     </li>
-    {% end for %} {% end if %}
+    {% end for %}
   </ul>
 </div>
 
@@ -85,3 +85,5 @@
       .attr("href", $(e.relatedTarget).data("href"));
   });
 </script>
+
+{% end if %}

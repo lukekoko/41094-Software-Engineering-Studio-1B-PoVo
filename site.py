@@ -121,7 +121,7 @@ def logout(response):
 def dashboard(response):
     ads = db.getAds(dbConn)
     usertype = response.get_secure_cookie('user_type')
-    userid = int(response.get_secure_cookie("user_id"))   
+    userid = int(response.get_secure_cookie("user_id"))
     name = response.get_secure_cookie('name')
     response.write(TemplateAPI.render(
         'dashboard.html', response, {"title": "Dashboard", "usertype": usertype, "ads": ads, "userid": userid}))
@@ -177,15 +177,16 @@ def advertisementDelete(response):
 def adView(response):
     adId = response.get_field('id', '')
     ads = db.viewAd(dbConn, adId)
-    userid = int(response.get_secure_cookie("user_id"))   
+    usertype = response.get_secure_cookie('user_type')
+    userid = int(response.get_secure_cookie("user_id"))
     response.write(TemplateAPI.render(
-        "advertisementView.html", response, {"title": "test", "ads": ads, "userid": userid}))
+        "advertisementView.html", response, {"title": "test", "ads": ads, "userid": userid, "usertype": usertype}))
 
 
 @loginCheck
 def advertisementEdit(response):
     ad = {}
-    ad["id"] = response.get_field('id', '') 
+    ad["id"] = response.get_field('id', '')
     ad["title"] = response.get_field("title")
     ad["desc"] = response.get_field("desc")
     ad["imgpath"] = []
@@ -260,9 +261,23 @@ def editAccount(response):
 @loginCheck
 def userAds(response):
     ads = db.getUserAds(dbConn, response.get_secure_cookie('user_id'))
+    usertype = response.get_secure_cookie('user_type')
     print ads
     response.write(TemplateAPI.render(
-        "userAds.html", response, {"title": "My Ads", "ads": ads}))
+        "userAds.html", response, {"title": "My Ads", "usertype": usertype, "ads": ads}))
+
+
+@loginCheck
+def searchCharities(response):
+    if not response.get_field("charitySearch"):
+        charities = db.getCharities(dbConn)
+        response.write(TemplateAPI.render("searchCharities.html",
+                                          response, {"title": "Charities", "charities": charities}))
+    else:
+        searchQuery = response.get_field("charitySearch")
+        filteredCharities = db.getFilteredCharities(dbConn, searchQuery)
+        response.write(TemplateAPI.render("filterCharities.html",
+                                          response, {"title": "Charities", "filteredCharities": filteredCharities}))
 
 
 @loginCheck
@@ -290,6 +305,7 @@ def main():
     server.register('/account', manageAccount,
                     get=manageAccount, post=editAccount)
     server.register('/myadvertisements', userAds)
+    server.register('/searchCharities', searchCharities)
     server.run(setup)
 
 

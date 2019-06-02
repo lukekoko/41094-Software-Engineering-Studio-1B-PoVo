@@ -1,6 +1,6 @@
 <div>
 	<div align="center">
-		<h1>All ads</h1>
+		<h1>Current advertisements</h1>
 			{%if userid%}
 			<button class="btn btn-primary" data-toggle="modal" data-target="#createAd">Create ad</button>
 			<a class="btn btn-secondary" href="/myadvertisements">View my ads</a>
@@ -14,10 +14,10 @@
 		{% else %}
 		{% for ad in ads %}
 		<li class="media my-2 " style="border: px; border-color: black; border-style: solid; border-radius: 10px">
-				<img src="/{!ad['img_path']!}" class="mr-3 ml-1 my-3" style="height: 20%; width: 20%;" onerror="this.onerror=null; this.src='/static/img/default.png'">
+				<img src="/{!ad['img_path']!}" class="mr-3 ml-1 my-3" style="max-width: 25%;" onerror="this.onerror=null; this.src='/static/img/default.png'">
 				<div class="media-body my-3">
 					<h3 class="mt-0 mb-1">{!ad["title"]!}</h3>
-					<h6>Posted: {!ad["datetime"]!}</h6>
+					<p>Posted: {!ad["datetime"]!}</p>
 					<p>
 						{!ad["desc"]!}
 					</p>
