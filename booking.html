@@ -1,0 +1,25 @@
+{% include navbar_logged_in.html %}
+
+<div align="center" style="margin : 5%;">
+  <h1>Create new appointment</h1>
+
+  <form method="POST" action="/booking">
+    <div class="form-group">
+      <label class="float-left">Title:</label>
+      <input type="text" class="form-control" id="title" name="title" placeholder="Enter a title" required />
+    </div>
+    <div class="form-group">
+      <label class="float-left">Description:</label>
+      <input type="text" class="form-control" id="desc" name="desc" placeholder="Enter a description" required />
+    </div>
+    <div class="form-group">
+      <label class="float-left">Date:</label>
+      <input type="date" class="form-control" id="date" name="date" required />
+    </div>
+      <div class="form-group">
+      <label class="float-left">Location:</label>
+      <input type="text" class="form-control" id="location" name="location" placeholder="Enter a location" required />
+    </div>
+    <button type="submit" class="btn btn-primary px-3">Create</button>
+  </form>
+</div>

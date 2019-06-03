@@ -1,0 +1,60 @@
+{% include navbar_logged_out.html %}
+
+<div align="center" style="margin : 5%;">
+  <h1>Register</h1>
+  {% if fail == "userExist"%}
+  <p class="alert alert-danger">User already exists</p>
+  {%end if%} 
+  {% if fail == "error"%}
+  <p class="alert alert-danger">An error occurred</p>
+  {%end if%}
+
+  <form method="POST" action="/register">
+    <div class="form-group">
+      <label class="float-left">Email</label>
+      <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required />
+    </div>
+    <div class="form-group">
+      <label class="float-left">Name</label>
+      <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required />
+    </div>
+    <div class="form-group">
+      <label class="float-left">Password</label>
+      <input type="password" class="form-control" id="password1" name="password1" placeholder="Enter a password" required />
+    </div>
+    <div class="form-group">
+      <label class="float-left">Confirm password</label>
+      <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm password" required />
+    </div>
+    <div class="form-group">
+      <label class="float-left">User type</label>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="usertype1" name="usertype" class="custom-control-input" value="1" required />
+        <label class="custom-control-label" for="usertype1">Charity</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="usertype2" name="usertype" class="custom-control-input" value="2" required />
+        <label class="custom-control-label" for="usertype2">Donor</label>
+      </div>
+    </div>
+    <a href="/login" class="btn btn-secondary px-3" data-toggle="tooltip" data-placement="top" title="Already have an account? Go login">
+      Login
+    </a>
+    <button type="submit" class="btn btn-primary px-3">Register</button>
+  </form>
+</div>
+<script>
+  var password = document.getElementById("password1");
+  var confirm_password = document.getElementById("password2");
+
+  function validatePassword() {
+    if (password.value != confirm_password.value) {
+      confirm_password.setCustomValidity("Passwords Don't Match");
+    } else {
+      confirm_password.setCustomValidity("");
+    }
+  }
+
+  password.onchange = validatePassword;
+  confirm_password.onkeyup = validatePassword;
+</script>

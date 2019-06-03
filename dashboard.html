@@ -1,0 +1,11 @@
+{% include navbar_logged_in.html %}
+<div style="margin: 1% 5% 5% 5%">
+  <div align="center">
+    {% if active == "0"%}
+    <p class="alert alert-danger">Please confirm your email</p>
+    {% end if %}
+    <!-- <h1>Hello {!name!}, welcome to PoVo</h1> -->
+    {% include advertisement.html%}
+  </div>
+  <div id="map" style="height:100%"></div>
+</div>
