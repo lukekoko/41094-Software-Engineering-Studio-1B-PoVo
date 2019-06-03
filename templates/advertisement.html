@@ -7,27 +7,27 @@
     {%end if%}
   </div>
   <div style="margin: 1% 5% 5% 5%">
-    {%if userid%}
-    <form method="GET" action="" name="searchForm">
+    <!-- <form method="GET" action="" name="searchForm">
       <div class="input-group mb-3">
-        <input type="search" class="form-control" placeholder="Search" id="charitySearch" name="charitySearch" aria-label="Search through site content" />
+        <input type="search" class="form-control" placeholder="Search" id="charitySearch" name="charitySearch"
+          aria-label="Search through site content" />
         <div class="input-group-append">
           <button class="btn btn-info" type="submit" onclick="submitBtn()">Search</button>
         </div>
       </div>
-    </form>
-    {%end if%}
+    </form> -->
     <ul class="list-unstyled" style="margin-top: 1%">
       {% if not ads %}
       <p class="alert alert-danger">No advertisements</p>
       {% else %} {% for ad in ads %}
       <li class="media my-2 " style="border: px; border-color: black; border-style: solid; border-radius: 10px">
-        <img src="/{!ad['img_path']!}" class="mr-3 ml-1 my-3 align-self-center" style="max-width: 25%;" onerror="this.onerror=null; this.src='/static/img/default.png'" />
+        <img src="/{!ad['img_path']!}" class="mr-3 ml-1 my-3 align-self-center" style="max-width: 25%;"
+          onerror="this.onerror=null; this.src='/static/img/default.png'" />
         <div class="media-body my-3">
           <h3 class="mt-0 mb-1">{!ad["title"]!}</h3>
           <p>Posted: {!ad["datetime"]!}</p>
           <p>
-            <!-- {!ad["desc"]!} -->
+            {!ad["desc"]!}
           </p>
         </div>
         <a class="btn btn-primary mx-1 my-3 align-self-center" href="/advertisement/view?id={!ad['id']!}">View</a>
@@ -78,7 +78,8 @@
   </div>
 </div>
 
-<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -96,7 +97,7 @@
 </div>
 
 <script>
-  $("#confirm-delete").on("show.bs.modal", function(e) {
+  $("#confirm-delete").on("show.bs.modal", function (e) {
     $(this)
       .find(".btn-ok")
       .attr("href", $(e.relatedTarget).data("href"));

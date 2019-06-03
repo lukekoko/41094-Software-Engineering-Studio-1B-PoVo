@@ -1,18 +1,11 @@
 {% include navbar_logged_in.html %}
 <div style="margin: 1% 5% 5% 5%">
-  <!-- {% if int(usertype) == 1 %}
-	<a class="btn btn-primary" href="/searchDonors">View/Search Donors</a>
-	{% end if %} {% if int(usertype) == 2 %}
-	<a class="btn btn-primary" href="/searchCharities">View/Search Charities</a>
-	{% end if %} -->
   <div align="center">
     {% if active == "0"%}
-        <p class="alert alert-danger">Please confirm your email</p>
+    <p class="alert alert-danger">Please confirm your email</p>
     {% end if %}
-    <h1>Hello {!name!}, welcome to PoVo</h1>
+    <!-- <h1>Hello {!name!}, welcome to PoVo</h1> -->
     {% include advertisement.html%}
   </div>
   <div id="map" style="height:100%"></div>
 </div>
-
-<!-- <a href="/booking" class="btn btn-primary">Appointment (under construction)</a> -->

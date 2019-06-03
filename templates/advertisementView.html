@@ -20,6 +20,9 @@
                             {!ad["desc"]!}
                         </p>
                         <div>
+                                {% if ad["user_id"] != userid %}
+                                <a class="btn btn-primary mx-1 my-3" href="/booking">Create Appointment</a>
+                                {%end if%}
                                 {% if ad["user_id"] == userid %}
                                 <button class="btn btn-primary px-3" data-toggle="modal" data-target="#editAd">Edit</button>
                                 <a href="#" data-href="/advertisement/delete?id={!ad['id']!}" data-toggle="modal" data-target="#confirm-delete" class="btn btn-danger mx-1 px-3">Delete</a>
@@ -48,7 +51,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="/advertisement/edit?id={!ad["id"]!}" enctype="multipart/form-data">
+                    <form method="POST" action="/" enctype="multipart/form-data">
                         <div class="form-group">
                             <label class="float-left">Title</label>
                             <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" required value='{!ad["title"]!}'/>
