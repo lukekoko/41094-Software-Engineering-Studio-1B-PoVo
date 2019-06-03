@@ -11,38 +11,31 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-sm navbar-light bg-primary">
+  <nav class="navbar navbar-expand-lg navbar-light bg-primary">
     <a href="/" class="navbar-brand">
       <img src="/static/img/logo.png" alt="" width="32" height="32" class="img-fluid" />
     </a>
-
-    <form method="GET" action="" name="searchForm" class="navbar-form navbar-right" role="search">
-      <!-- <div class="input-group mb-3"> -->
+    <!-- <form method="GET" action="" name="searchForm" class="navbar-form navbar-right" role="search">
       <input type="search" class="form-control" placeholder="Search" id="charitySearch" name="charitySearch"
         aria-label="Search through site content" />
-      <!-- </div> -->
-      <!-- class="mx-2 my-auto d-inline w-100" -->
+    </form> -->
 
-      <!-- class="navbar-form navbar-right" -->
 
-    </form>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
       aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-
     <div class="collapse navbar-collapse justify-content-between" id="navbarNavAltMarkup">
       <div class="nav navbar-nav">
-        <h1>Welcome to PoVo. Sign in or Register:</h1>
-        <a class="btn btn-lg btn-warning" href="/login">Login</a>
-        <a class="btn btn-lg btn-warning" href="/register">Register</a>
+        <a href="/login" class="btn btn-light mx-3 my-1">Login</a>
+        <a href="/register" class="btn btn-light mx-3 my-1">Register</a>
       </div>
-      <!-- <div class="nav navbar-nav">
-        <a href="/account" class="btn btn-light mx-3 px-2 my-1">Manage User</a>
-        <a href="/logout" class="btn btn-warning mx-3 px-3 my-1">Logout</a>
-      </div> -->
     </div>
+
+    <!-- <a class="btn btn-lg btn-warning" href="/login">Login</a>
+    <a class="btn btn-lg btn-warning" href="/register">Register</a> -->
+
 
   </nav>
 </body>

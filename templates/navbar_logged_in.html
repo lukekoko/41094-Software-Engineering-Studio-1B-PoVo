@@ -15,23 +15,17 @@
     <a href="/" class="navbar-brand">
       <img src="/static/img/logo.png" width="40" height="40" alt="" class="img-fluid" />
     </a>
-
-
-    <form method="GET" action="" name="searchForm">
-      <div class="input-group mb-3">
-        <input type="search" class="form-control" placeholder="Search" id="charitySearch" name="charitySearch"
-          aria-label="Search through site content" />
-      </div>
+    <form method="GET" action="" name="searchForm" class="navbar-form navbar-right" role="search">
+      <input type="search" class="form-control" placeholder="Search" id="charitySearch" name="charitySearch"
+        aria-label="Search through site content" />
     </form>
+
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
       aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-
     <div class="collapse navbar-collapse justify-content-between" id="navbarNavAltMarkup">
       <div class="nav navbar-nav">
-
-        <h1>Hello {!name!}, welcome to PoVo</h1>
         <a href="/dashboard" class="btn btn-light mx-3 my-1">Dashboard</a>
         <a href="/myappointments" class="btn btn-light mx-3 my-1">Appointments</a>
         {% if int(usertype) == 2 %}
@@ -42,7 +36,7 @@
         {% end if %}
       </div>
       <div class="nav navbar-nav">
-        <a href="/account" class="btn btn-light mx-3 px-2 my-1">Manage User</a>
+        <a href="/account" class="btn btn-light mx-3 px-2 my-1">Manage Account</a>
         <a href="/logout" class="btn btn-warning mx-3 px-3 my-1">Logout</a>
       </div>
     </div>
