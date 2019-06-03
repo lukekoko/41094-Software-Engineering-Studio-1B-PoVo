@@ -1,39 +1,46 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>{!title!}</title>
-    <link rel="icon" href="/static/img/povo.png" />
-    <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
-    <script type="text/javascript" src="/static/js/jquery-3.3.1.slim.min.js"></script>
-    <script type="text/javascript" src="/static/js/popper.min.js"></script>
-    <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
-  </head>
 
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-primary">
-      <a href="/" class="navbar-brand" style="max-width: 15%">
-        <img src="/static/img/logo.png" alt="" class="img-fluid" />
-      </a>
-      <a class="navbar-brand h1" href="/"> </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse justify-content-between" id="navbarNavAltMarkup">
-        <div class="nav navbar-nav">
-          <a href="/dashboard" class="btn btn-light mx-3 my-1">Dashboard</a>
-          <a href="/myappointments" class="btn btn-light mx-3 my-1">Appointments</a>
-          {% if int(usertype) == 2 %}
-          <a class="btn btn-light mx-3 my-1" href="/searchCharities">Charities</a>
-          {%end if%} 
-          {% if int(usertype) == 1 %}
-          <a class="btn btn-light mx-3 my-1" href="/searchCharities">Donors</a>
-          {% end if %}
-        </div>
-        <div class="nav navbar-nav">
-          <a href="/account" class="btn btn-light mx-3 px-2 my-1">Manage Account</a>
-          <a href="/logout" class="btn btn-warning mx-3 px-3 my-1">Logout</a>
-        </div>
+<head>
+  <title>{!title!}</title>
+  <link rel="icon" href="/static/img/povo.png" />
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+  <script type="text/javascript" src="/static/js/jquery-3.3.1.slim.min.js"></script>
+  <script type="text/javascript" src="/static/js/popper.min.js"></script>
+  <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-primary">
+    <a href="/" class="navbar-brand">
+      <img src="/static/img/logo.png" width="40" height="40" alt="" class="img-fluid" />
+    </a>
+    <form method="GET" action="" name="searchForm" class="navbar-form navbar-right" role="search">
+      <input type="search" class="form-control" placeholder="Search" id="charitySearch" name="charitySearch"
+        aria-label="Search through site content" />
+    </form>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-between" id="navbarNavAltMarkup">
+      <div class="nav navbar-nav">
+        <a href="/dashboard" class="btn btn-light mx-3 my-1">Dashboard</a>
+        <a href="/myappointments" class="btn btn-light mx-3 my-1">Appointments</a>
+        {% if int(usertype) == 2 %}
+        <a class="btn btn-light mx-3 my-1" href="/searchCharities">Charities</a>
+        {%end if%}
+        {% if int(usertype) == 1 %}
+        <a class="btn btn-light mx-3 my-1" href="/searchCharities">Donors</a>
+        {% end if %}
       </div>
-    </nav>
-  </body>
+      <div class="nav navbar-nav">
+        <a href="/account" class="btn btn-light mx-3 px-2 my-1">Manage Account</a>
+        <a href="/logout" class="btn btn-warning mx-3 px-3 my-1">Logout</a>
+      </div>
+    </div>
+  </nav>
+</body>
+
 </html>
