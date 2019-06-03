@@ -1,12 +1,14 @@
-{% include navbar.html %}
+{% include navbar_logged_out.html %}
 
-<div align="center" style="margin:5%">
-  <h1 class="display-1">homepage is a big YEET!</h1>
-  <h1 class="display-2">👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀</h1>
-	<a href="/login" class="btn btn-primary btn-lg btn-block my-3">
-		Login
-	</a>
-	<a href="/register" class="btn btn-primary btn-lg btn-block my-3">
-		Register
-	</a>
+<div style="margin: 1% 5% 5% 5%">
+    <div align="center">
+        <h1>Australia's #1 donation exchange place</h1>
+    </div>
+  <div align="center">
+    <a class="btn btn-primary btn-lg btn-block" href="/login" >New Listing</a>
+
+    <!-- <a class="btn btn-lg btn-warning" href="/login">Login</a> -->
+    <!-- <a class="btn btn-lg btn-warning" href="/register">Register</a> -->
+    {% include advertisement.html%}
+  </div>
 </div>
