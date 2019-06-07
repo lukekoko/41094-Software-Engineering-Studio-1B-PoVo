@@ -9,7 +9,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 What things you need to install the software and how to install them
 
-[python2] (https://www.python.org/) - Download Python 2
+[python2] (https://www.python.org/) - Download and install Python 2
 
 once python2 is installed
 use pip to install packages
