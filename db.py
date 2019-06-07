@@ -37,7 +37,7 @@ def checkPassword(conn, email, password):
             "SELECT password FROM user WHERE email=?", (email,)).fetchone()
         if bcrypt.checkpw(password.encode('utf8'), hashPW[0].encode('utf8')):
             usertype = conn.execute(
-                "SELECT id, type, name, active FROM user WHERE email=?", (email,)).fetchone()
+                "SELECT id, type, name, active, email FROM user WHERE email=?", (email,)).fetchone()
             return usertype
         else:
             return False
@@ -211,7 +211,7 @@ def confirmUser(conn, email):
 def getAppointments(conn, userid):
     apps = []
     cursor = conn.execute(
-        "SELECT id, title, description, datetime, location FROM bookings WHERE id=?", (userid,)
+        "SELECT id, title, description, datetime, location FROM bookings WHERE user_id=?", (userid,)
     )
     for row in cursor:
         print row
@@ -222,6 +222,9 @@ def getAppointments(conn, userid):
         ad["datetime"] = row[3]
         ad["location"] = row[4]
         apps.append(ad)
+        print ad
+    if len(apps) == 0:
+        print "no appointments"
     return apps
 def editApp(conn, app):
     conn.execute(

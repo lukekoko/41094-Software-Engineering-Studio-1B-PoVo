@@ -59,7 +59,7 @@ def registerPost(response):
     print register
     if register == 1:
         print "registration succesful"
-        mailPoVo.sendConfirmationEmail(user['email'])
+        mailPoVo.sendConfirmationEmail(user['email'], user['name'])
         response.redirect('/login')
     # register failed go back to register
     elif register == 2:
@@ -90,6 +90,7 @@ def loginPost(response):
         response.set_secure_cookie('user_type', str(matches[1]))
         response.set_secure_cookie('name', str(matches[2]))
         response.set_secure_cookie('active', str(matches[3]))
+        response.set_secure_cookie('email', str(matches[4]))
         response.redirect('/dashboard')
     else:
         response.redirect('/login?fail=1')
@@ -173,6 +174,7 @@ def advertisementPost(response):
     result = db.createAd(dbConn, ad)
     if result:
         print "ad succesfully created"
+        mailPoVo.sendConfirmAd(response.get_secure_cookie('email'),response.get_secure_cookie('name'))
         response.redirect("/dashboard")
     else:
         print "failed to create ad"
@@ -247,7 +249,8 @@ def bookingPost(response):
     result = db.createBooking(dbConn, booking)
     if result:
         print "booking successfully created"
-        response.redirect("/dashboard")
+        mailPoVo.sendConfirmApp(response.get_secure_cookie('email'),response.get_secure_cookie('name'))
+        response.redirect("/myappointments")
     else:
         print "Failed to create booking"
         response.redirect("/booking")
